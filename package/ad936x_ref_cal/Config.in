@@ -1,0 +1,11 @@
+comment "ad936x_ref_cal depends fftw's double precision"
+	depends on !BR2_PACKAGE_FFTW_PRECISION_DOUBLE
+
+config BR2_PACKAGE_AD936X_REF_CAL
+	bool "Reference clock calibration utility for AD9361/3/4"
+	depends on BR2_PACKAGE_FFTW
+	depends on BR2_PACKAGE_FFTW_PRECISION_DOUBLE
+	depends on BR2_TOOLCHAIN_HAS_THREADS
+	select BR2_PACKAGE_LIBIIO_PLUTO
+	help
+	  Reference clock calibration utility for AD9361/3/4

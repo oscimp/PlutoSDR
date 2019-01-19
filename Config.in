@@ -1,0 +1,9 @@
+
+source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/ad936x_ref_cal/Config.in"
+source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/libad9361-iio/Config.in"
+source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/libiio-pluto/Config.in"
+source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/libini/Config.in"
+source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/poll_sysfs/Config.in"
+source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/gr-iio/Config.in"
+
+
