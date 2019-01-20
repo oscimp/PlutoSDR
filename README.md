@@ -27,6 +27,12 @@ In the buildroot directory
 ```bash
 make zynq_pluto_defconfig
 ```
-will configure buildroot for PlutoSDR support. <code>make menuconfig</code> allows for configuring
+will configure buildroot for minimal PlutoSDR support. More ambitious,
+```bash
+zynq_pluto_gnuradio_defconfig
+```
+will configure buildroot for PlutoSDR support in addition to GNURadio with Python support.
+
+<code>make menuconfig</code> allows for configuring
 additional settings of the buildroot environment, especially Target Packages, <code>make</code> builds
 the images to be found at the end of the compilation in <code>output/images</code>.
