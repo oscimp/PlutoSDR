@@ -2,10 +2,10 @@
 BR2_EXTERNAL framework for Analog Device's PlutoSDR Zynq
 
 This repository provides buildroot based support for ADALM-pluto board (based on
-analogdevice plutosdr-fw).
+[Analog Device's plutosdr-fw](https://github.com/analogdevicesinc/plutosdr-fw)).
 
-Currently this repository provides only support for rootfs and linux (bootloader
-part must be added).
+At the moment, this repository provides only support for rootfs and linux (the bootloader
+part still remains to be added).
 
 It uses the BR2_EXTERNAL mecanism to add this support in buildroot.
 
@@ -14,17 +14,19 @@ This support has been tested with the latest stable release of buildroot (2018.1
 How-to use it
 =============
 
-You need to download corresponding tarball:
+Download the latest tested buildroot tarball:
 ```bash
 wget https://buildroot.org/downloads/buildroot-2018.11.1.tar.gz
 ```
 
-To add the support you need to source **sourceme.ggm** file to add **BR2_EXTERNAL** to
-your env (it's possible to add <code>export
-BR2_EXTERNAL=/somewhere/PlutoSDR</code> in *.bashrc*).
+Adding support for the PlutoSDR requires sourcing the **sourceme.ggm** file to add the **BR2_EXTERNAL** 
+variable definition (alternatively, one might want to add <code>export
+BR2_EXTERNAL=/somewhere/PlutoSDR</code> to the *.bashrc* initialization file).
 
-Now, in buildroot directory you can use 
+In the buildroot directory  
 ```bash
 make zynq_pluto_defconfig
 ```
-to configure buildroot
+will configure buildroot for PlutoSDR support. <code>make menuconfig</code> allows for configuring
+additional settings of the buildroot environment, especially Target Packages, <code>make</code> builds
+the images to be found at the end of the compilation in <code>output/images</code>.
