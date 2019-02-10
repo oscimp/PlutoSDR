@@ -29,7 +29,7 @@ make zynq_pluto_defconfig
 ```
 will configure buildroot for minimal PlutoSDR support. More ambitious,
 ```bash
-zynq_pluto_gnuradio_defconfig
+make zynq_pluto_gnuradio_defconfig
 ```
 will configure buildroot for PlutoSDR support in addition to GNURadio with Python support.
 
