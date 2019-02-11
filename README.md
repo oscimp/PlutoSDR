@@ -38,7 +38,7 @@ languages --> python</code> and then <code>Miscellaneous --> gnuradio --> python
 activate gr-zeromq support to stream I/Q coefficients from the PlutoSDR to the PC. Do not attempt adding Python
 support after compiling an image without Python support: the gnuradio packages would not be compiled properly.
 Start from scratch from a clean output directory (<code>rm -rf output</code>). For the resulting image to be
-smaller than 32 MB, we remove <code>wpa_supplicant</code> and associated 802.11 packages as well as <code>avahi</a>.
+smaller than 32 MB, we remove <code>wpa_supplicant</code> and associated 802.11 packages as well as <code>avahi</code>.
 
 Overall, <code>make menuconfig</code> allows for configuring
 additional settings of the buildroot environment, especially Target Packages, <code>make</code> builds
