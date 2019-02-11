@@ -7,7 +7,7 @@ This repository provides buildroot based support for ADALM-pluto board (based on
 At the moment, this repository provides only support for rootfs and linux (the bootloader
 part still remains to be added).
 
-It uses the BR2_EXTERNAL mecanism to add this support in buildroot.
+It uses the BR2_EXTERNAL mechanism to add this support to buildroot.
 
 This support has been tested with the latest stable release of buildroot (2018.11.1).
 
@@ -27,12 +27,37 @@ In the buildroot directory
 ```bash
 make zynq_pluto_defconfig
 ```
-will configure buildroot for minimal PlutoSDR support. More ambitious,
+will configure buildroot for minimal PlutoSDR support. More ambitious, after git cloning the 
+latest release of buildroot,
 ```bash
 make zynq_pluto_gnuradio_defconfig
 ```
-will configure buildroot for PlutoSDR support in addition to GNURadio with Python support.
+will configure buildroot for PlutoSDR support in addition to GNURadio. The default configuration is
+to not support Python, yielding a 13.4 MB image. Activating Python requires going to <code>Target Packages --> Interpreter
+languages --> python</code> and then <code>Miscellaneous --> gnuradio --> python support</code>. We also 
+activate gr-zeromq support to stream I/Q coefficients from the PlutoSDR to the PC. Do not attempt adding Python
+support after compiling an image without Python support: the gnuradio packages would not be compiled properly.
+Start from scratch from a clean output directory (<code>rm -rf output</code>). For the resulting image to be
+smaller than 32 MB, we remove <code>wpa_supplicant</code> and associated 802.11 packages as well as <code>avahi</a>.
 
-<code>make menuconfig</code> allows for configuring
+Overall, <code>make menuconfig</code> allows for configuring
 additional settings of the buildroot environment, especially Target Packages, <code>make</code> builds
 the images to be found at the end of the compilation in <code>output/images</code>.
+
+The <code>output/images/pluto.frm</code> file is then copied to the mass storage mounted from the PlutoSDR (in
+most cases <code>/dev/sdb1</code>)
+and then written after ejecting the associated mass storage root (in this example <code>sudo eject /dev/sdb</code>) as 
+explained at [Analog Device's PlutoSDR firmware information](https://wiki.analog.com/university/tools/pluto/users/firmware)
+
+In case of failure, DFU programming provides a backup solution.
+
+![PlutoSDR picture](doc/picture.jpg)
+
+GNU Radio on the PlutoSDR
+=========================
+
+Listening to an FM station demodulated by the WBFM block running on the Zynq PS requires activating the
+second CPU core, extending the AD9363 carrier frequency band to those of the AD9364, and compiling fftw with
+speed optimization. With such considerations, the following [processing block](doc/top_block_for_pluto.py). The
+following [processing block](doc/top_block_for_PC.py) is run on the PC to fetch data through a 0MQ socket and
+play sound on the PC speaker.
