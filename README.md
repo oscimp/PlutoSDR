@@ -67,7 +67,9 @@ speed optimization. With such considerations, the following [processing block](d
 following [processing block](doc/top_block_for_PC.py) is run on the PC to fetch data through a 0MQ socket and
 play sound on the PC speaker.
 
-
+[Here is a movie demonstrating](doc/movie_FM_to_0MQstream.ogv) the acquisition of a FM station in the commercial
+broadcast band, processing using the WBFM block running on the Zynq, streaming the data to the PC (at 24 kS/s rather
+than the >200 kS/s needed to demodulate FM) and using the PC as a sound card. 
 
 Activating hard-floating point processing is mandatory to achieve continuous FM demodulated sound stream: indeed, lacking the
 [~40% processing gain](https://blog.paranoidpenguin.net/2017/09/hard-float-vs-soft-float-with-slackware-arm-on-the-rpi-3/) would 
