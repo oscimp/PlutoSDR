@@ -63,9 +63,7 @@ GNU Radio on the PlutoSDR
 
 Listening to an FM station demodulated by the WBFM block running on the Zynq PS requires activating the
 second CPU core, extending the AD9363 carrier frequency band to those of the AD9364, and compiling fftw with
-speed optimization. With such considerations, the following [processing block](doc/top_block_for_pluto.py). The
-following [processing block](doc/top_block_for_PC.py) is run on the PC to fetch data through a 0MQ socket and
-play sound on the PC speaker.
+speed optimization. With such considerations, the following [processing block](doc/top_block_for_pluto.py) runs on the PS of the Zynq to fetch samples from the AD9363 (local IIO connection), filter and demodulate the signal, and push to a 0MQ stream the sound signal at 24 or 48 kS/s. On the 0MQ receiver side, the following [processing block](doc/top_block_for_PC.py) is run on the PC to fetch data through a 0MQ socket and play sound on the PC speaker.
 
 [Here is a movie demonstrating](doc/movie_FM_to_0MQstream.ogv) the acquisition of a FM station in the commercial
 broadcast band, processing using the WBFM block running on the Zynq, streaming the data to the PC (at 24 kS/s rather
