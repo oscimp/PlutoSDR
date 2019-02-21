@@ -49,7 +49,8 @@ most cases <code>/dev/sdb1</code>)
 and then written after ejecting the associated mass storage root (in this example <code>sudo eject /dev/sdb</code>) as 
 explained at [Analog Device's PlutoSDR firmware information](https://wiki.analog.com/university/tools/pluto/users/firmware)
 
-In case of failure, DFU programming provides a backup solution. 
+In case of failure, DFU programming provides a backup solution. **MAKE SURE TO POWER THE DIO PIN OF THE FTDI INTERFACE
+WITH 1.8V and NOT the default 3.3 or 5V (that will definitely destroy the Zynq)**
 
 ![PlutoSDR picture](doc/picture.jpg)
 
