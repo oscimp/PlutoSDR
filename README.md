@@ -9,15 +9,30 @@ part still remains to be added).
 
 It uses the BR2_EXTERNAL mechanism to add this support to buildroot.
 
-This support has been tested with the latest stable release of buildroot (2018.11.1).
+This support has been tested with the latest stable release of buildroot (2018.11.1) and git master branch.
 
 How-to use it
 =============
+
+<span style="color:red"> **Due to a modification on the *fftw* package *PlutoSDR*
+master branch must be used with *buildroot* master branch until new stable or
+LTS release published**</span>
+
+### With *PlutoSDR* tag **v2018.11.1** (<code>git checkout v2018.11.1</code>)
 
 Download the latest tested buildroot tarball:
 ```bash
 wget https://buildroot.org/downloads/buildroot-2018.11.1.tar.gz
 ```
+
+### With *PlutoSDR* master
+
+clone buildroot git:
+```bash
+git clone git://git.buildroot.net/buildroot
+``` 
+
+### Configure, build and install
 
 Adding support for the PlutoSDR requires sourcing the **sourceme.ggm** file to add the **BR2_EXTERNAL** 
 variable definition (alternatively, one might want to add <code>export
@@ -49,15 +64,34 @@ most cases <code>/dev/sdb1</code>)
 and then written after ejecting the associated mass storage root (in this example <code>sudo eject /dev/sdb</code>) as 
 explained at [Analog Device's PlutoSDR firmware information](https://wiki.analog.com/university/tools/pluto/users/firmware)
 
-In case of failure, DFU programming provides a backup solution.
+In case of failure, DFU programming provides a backup solution. **MAKE SURE TO POWER THE DIO PIN OF THE FTDI INTERFACE
+WITH 1.8V and NOT the default 3.3 or 5V (that will definitely destroy the Zynq)**
 
 ![PlutoSDR picture](doc/picture.jpg)
+
+Doing so does not necessarily require the FTDI USB to R232 converter, although this peripheral will provide a prompt to check what
+is happening on the PlutoSDR. Switching to DFU mode is achieved by mounting the first mass storage partition (let's say /dev/sdb1),
+modifying <code>config.txt</code> to set <code>dfu = 1</code>, and saving the change + rebooting the board with <code>sudo eject 
+/dev/sdb</code>. Once the board is in DFU mode, the DFU image is flashed with <code>dfu-util  -D /tmp/pluto.dfu -a firmware.dfu</code>.
 
 GNU Radio on the PlutoSDR
 =========================
 
 Listening to an FM station demodulated by the WBFM block running on the Zynq PS requires activating the
 second CPU core, extending the AD9363 carrier frequency band to those of the AD9364, and compiling fftw with
-speed optimization. With such considerations, the following [processing block](doc/top_block_for_pluto.py). The
-following [processing block](doc/top_block_for_PC.py) is run on the PC to fetch data through a 0MQ socket and
-play sound on the PC speaker.
+speed optimization. With such considerations, the following [processing block](doc/top_block_for_pluto.py) runs on the PS of the Zynq to fetch samples from the AD9363 (local IIO connection), filter and demodulate the signal, and push to a 0MQ stream the sound signal at 24 or 48 kS/s. On the 0MQ receiver side, the following [processing block](doc/top_block_for_PC.py) is run on the PC to fetch data through a 0MQ socket and play sound on the PC speaker.
+
+[Here is a movie demonstrating](doc/movie_FM_to_0MQstream.ogv) the acquisition of a FM station in the commercial
+broadcast band, processing using the WBFM block running on the Zynq, streaming the data to the PC (at 24 kS/s rather
+than the >200 kS/s needed to demodulate FM) and using the PC as a sound card. 
+
+Activating hard-floating point processing is mandatory to achieve continuous FM demodulated sound stream: indeed, lacking the
+[~40% processing gain](https://blog.paranoidpenguin.net/2017/09/hard-float-vs-soft-float-with-slackware-arm-on-the-rpi-3/) would 
+result in discontinuous sound output due to insufficient computational power to run the WBFM block on the
+minimum 200-kS/s input stream.
+
+Custom bitstream on the PL
+==========================
+
+Customizing the PL bitstream meets some requirement for full control of the PlutoSDR features: in this example, an ALSA-compatible
+audio output is added to make the PlutoSDR a fully autonomous FM-broadcast radio receiver.
