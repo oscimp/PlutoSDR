@@ -9,15 +9,30 @@ part still remains to be added).
 
 It uses the BR2_EXTERNAL mechanism to add this support to buildroot.
 
-This support has been tested with the latest stable release of buildroot (2018.11.1).
+This support has been tested with the latest stable release of buildroot (2018.11.1) and git master branch.
 
 How-to use it
 =============
+
+<span style="color:red"> **Due to a modification on the *fftw* package *PlutoSDR*
+master branch must be used with *buildroot* master branch until new stable or
+LTS release published**</span>
+
+### With *PlutoSDR* tag **v2018.11.1** (<code>git checkout v2018.11.1</code>)
 
 Download the latest tested buildroot tarball:
 ```bash
 wget https://buildroot.org/downloads/buildroot-2018.11.1.tar.gz
 ```
+
+### With *PlutoSDR* master
+
+clone buildroot git:
+```bash
+git clone git://git.buildroot.net/buildroot
+``` 
+
+### Configure, build and install
 
 Adding support for the PlutoSDR requires sourcing the **sourceme.ggm** file to add the **BR2_EXTERNAL** 
 variable definition (alternatively, one might want to add <code>export
