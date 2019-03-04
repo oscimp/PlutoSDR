@@ -93,5 +93,7 @@ minimum 200-kS/s input stream.
 Custom bitstream on the PL
 ==========================
 
-Customizing the PL bitstream meets some requirement for full control of the PlutoSDR features: in this example, an ALSA-compatible
-audio output is added to make the PlutoSDR a fully autonomous FM-broadcast radio receiver.
+Customizing the PL bitstream meets some requirement for full control of the PlutoSDR features: in [this example](https://github.com/oscimp/oscimpDigital/tree/master/doc/tutorials/plutosdr/1-gnuradio-audio), an ALSA-compatible
+audio output is added to make the PlutoSDR a fully autonomous FM-broadcast radio receiver. Adding such functionalities
+requires generating a new bitstream including the additional block, generating a new DFU image to send to the PlutoSDR,
+and telling GNU/Linux about the new reconfigurable hardware (devicetree entry). The [documentation](https://github.com/oscimp/oscimpDigital/blob/master/doc/tutorials/plutosdr/1-gnuradio-audio/1-gnuradio-audio.pdf) aims at describing all these steps.
