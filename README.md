@@ -14,23 +14,12 @@ This support has been tested with the latest stable release of buildroot (2018.1
 How-to use it
 =============
 
-<span style="color:red"> **Due to a modification on the *fftw* package *PlutoSDR*
-master branch must be used with *buildroot* master branch until new stable or
-LTS release published**</span>
+### With *PlutoSDR* tag **v2019.02**
 
-### With *PlutoSDR* tag **v2018.11.1** (<code>git checkout v2018.11.1</code>)
-
-Download the latest tested buildroot tarball:
+Download the tested buildroot tarball:
 ```bash
-wget https://buildroot.org/downloads/buildroot-2018.11.1.tar.gz
+wget https://buildroot.org/downloads/buildroot-2019.02.tar.gz
 ```
-
-### With *PlutoSDR* master
-
-clone buildroot git:
-```bash
-git clone git://git.buildroot.net/buildroot
-``` 
 
 ### Configure, build and install
 
