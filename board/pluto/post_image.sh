@@ -3,11 +3,17 @@ BOARD_DIR=$(dirname $0)
 mkimage=$HOST_DIR/bin/mkimage
 dfu_suffix=$HOST_DIR/bin/dfu-suffix
 
+if [ $# -eq 0 ]; then
+	BIT_FILE=$BOARD_DIR/system_top.bit
+else
+	BIT_FILE=$1
+fi
+
 DEVICE_VID=0x0456
 DEVICE_PID=0xb673
 
 cp $BOARD_DIR/pluto.its $BINARIES_DIR/pluto.its 
-cp $BOARD_DIR/system_top.bit $BINARIES_DIR/system_top.bit
+cp $BIT_FILE $BINARIES_DIR/system_top.bit
 
 echo "# entering $BINARIES_DIR for the next command"
 (cd $BINARIES_DIR && $mkimage -f pluto.its pluto.itb) 
