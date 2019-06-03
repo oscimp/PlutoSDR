@@ -1,29 +1,30 @@
 TARGET=pluto
 BOARD_DIR=$(dirname $0)
+BIN_DIR=$1
 mkimage=$HOST_DIR/bin/mkimage
 dfu_suffix=$HOST_DIR/bin/dfu-suffix
 
-if [ $# -eq 0 ]; then
+if [ $# -eq 1 ]; then
 	BIT_FILE=$BOARD_DIR/system_top.bit
 else
-	BIT_FILE=$1
+	BIT_FILE=$2
 fi
 
 DEVICE_VID=0x0456
 DEVICE_PID=0xb673
 
-cp $BOARD_DIR/pluto.its $BINARIES_DIR/pluto.its 
-cp $BIT_FILE $BINARIES_DIR/system_top.bit
+cp $BOARD_DIR/pluto.its $BIN_DIR/pluto.its
+cp $BIT_FILE $BIN_DIR/system_top.bit
 
-echo "# entering $BINARIES_DIR for the next command"
-(cd $BINARIES_DIR && $mkimage -f pluto.its pluto.itb) 
- 
+echo "# entering $BIN_DIR for the next command"
+(cd $BIN_DIR && $mkimage -f pluto.its pluto.itb)
+
 echo "generating the pluto.frm"
-md5sum $BINARIES_DIR/pluto.itb | cut -d ' ' -f 1 > $BINARIES_DIR/pluto.md5
-cat $BINARIES_DIR/pluto.itb  $BINARIES_DIR/pluto.md5 > $BINARIES_DIR/pluto.frm
+md5sum $BIN_DIR/pluto.itb | cut -d ' ' -f 1 > $BIN_DIR/pluto.md5
+cat $BIN_DIR/pluto.itb  $BIN_DIR/pluto.md5 > $BIN_DIR/pluto.frm
 
-echo "generating pluto.dfu" 
-$dfu_suffix -a $BINARIES_DIR/pluto.itb -v $DEVICE_VID -p $DEVICE_PID
-mv $BINARIES_DIR/pluto.itb $BINARIES_DIR/pluto.dfu	
+echo "generating pluto.dfu"
+$dfu_suffix -a $BIN_DIR/pluto.itb -v $DEVICE_VID -p $DEVICE_PID
+mv $BIN_DIR/pluto.itb $BIN_DIR/pluto.dfu
 
-rm -f $BINARIES_DIR/pluto.its $BINARIES_DIR/*.md5
+rm -f $BIN_DIR/pluto.its $BIN_DIR/*.md5
