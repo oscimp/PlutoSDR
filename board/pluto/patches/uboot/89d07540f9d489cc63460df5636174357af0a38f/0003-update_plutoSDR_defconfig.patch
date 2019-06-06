@@ -1,0 +1,11 @@
+Index: uboot-89d07540f9d489cc63460df5636174357af0a38f/configs/zynq_pluto_defconfig
+===================================================================
+--- uboot-89d07540f9d489cc63460df5636174357af0a38f.orig/configs/zynq_pluto_defconfig
++++ uboot-89d07540f9d489cc63460df5636174357af0a38f/configs/zynq_pluto_defconfig
+@@ -1,5 +1,5 @@
+ CONFIG_ARM=y
+-CONFIG_SYS_CONFIG_NAME="zynq_zc70x"
++CONFIG_SYS_CONFIG_NAME="zynq_pluto-sdr"
+ CONFIG_ARCH_ZYNQ=y
+ CONFIG_SYS_MALLOC_F_LEN=0x800
+ CONFIG_DEFAULT_DEVICE_TREE="zynq-pluto-sdr"
