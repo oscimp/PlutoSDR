@@ -4,8 +4,7 @@ BR2_EXTERNAL framework for Analog Device's PlutoSDR Zynq
 This repository provides buildroot based support for ADALM-pluto board (based on
 [Analog Device's plutosdr-fw](https://github.com/analogdevicesinc/plutosdr-fw)).
 
-At the moment, this repository provides only support for rootfs and linux (the bootloader
-part still remains to be added).
+At the moment, this repository provides support for rootfs, linux and bootloader.
 
 It uses the BR2_EXTERNAL mechanism to add this support to buildroot.
 
