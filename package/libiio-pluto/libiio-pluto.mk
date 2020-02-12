@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-LIBIIO_PLUTO_VERSION = 0.17
+LIBIIO_PLUTO_VERSION = 0.18
 LIBIIO_PLUTO_SOURCE = libiio-$(LIBIIO_PLUTO_VERSION).tar.gz
 LIBIIO_PLUTO_SITE = $(call github,analogdevicesinc,libiio,v$(LIBIIO_PLUTO_VERSION))
 
