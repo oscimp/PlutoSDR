@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PLUTO_SYSTEM_TOP_BIT_VERSION = v0.30
+PLUTO_SYSTEM_TOP_BIT_VERSION = v0.31
 PLUTO_SYSTEM_TOP_BIT_SOURCE = plutosdr-jtag-bootstrap-$(PLUTO_SYSTEM_TOP_BIT_VERSION).zip
 PLUTO_SYSTEM_TOP_BIT_SITE = http://github.com/analogdevicesinc/plutosdr-fw/releases/download/$(PLUTO_SYSTEM_TOP_BIT_VERSION)
 
