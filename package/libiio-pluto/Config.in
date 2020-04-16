@@ -60,6 +60,7 @@ config BR2_PACKAGE_LIBIIO_PLUTO_IIOD
 	bool "IIO Daemon"
 	default y
 	depends on BR2_TOOLCHAIN_HAS_THREADS
+	select BR2_PACKAGE_LIBAIO
 	select BR2_PACKAGE_LIBIIO_PLUTO_LOCAL_BACKEND
 	help
 	  Install the IIO Daemon.
