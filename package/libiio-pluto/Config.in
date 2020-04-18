@@ -18,6 +18,7 @@ config BR2_PACKAGE_LIBIIO_PLUTO_LOCAL_BACKEND
 config BR2_PACKAGE_LIBIIO_PLUTO_LOCAL_CONFIG
 	bool "Local context attributes"
 	depends on BR2_PACKAGE_LIBINI
+	select BR2_PACKAGE_LIBIIO_PLUTO_LOCAL_BACKEND
 	default y
 	help
 	  Read local context attributes from /etc/libiio.ini.
