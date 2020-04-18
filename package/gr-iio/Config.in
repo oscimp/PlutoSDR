@@ -1,9 +1,13 @@
+comment "gr-iio needs gnuradio w/ python support"
 config BR2_PACKAGE_GR_IIO
 	bool "gr-iio"
+	depends on BR2_PACKAGE_GNURADIO
+	depends on BR2_PACKAGE_GNURADIO_PYTHON
 	select BR2_PACKAGE_LIBAD9361_IIO
-	select BR2_PACKAGE_GNURADIO
 	select BR2_PACKAGE_GNURADIO_ANALOG
 	select BR2_PACKAGE_GNURADIO_BLOCKS
+	select BR2_PACKAGE_GNURADIO_FFT
+	select BR2_PACKAGE_GNURADIO_FILTER
 	help
 	  GNU Radio IIO Blocks
 	  https://github.com/analogdevicesinc/gr-iio

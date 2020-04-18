@@ -1,0 +1,49 @@
+comment "gnss-sdr needs a toolchain w/ C++, NPTL, wchar, dynamic library"
+	depends on BR2_USE_MMU
+	depends on !BR2_INSTALL_LIBSTDCPP || !BR2_USE_WCHAR || \
+		!BR2_TOOLCHAIN_HAS_THREADS_NPTL || BR2_STATIC_LIBS
+comment "gnss-sdr needs gnuradio and armadillo"
+	depends on !(BR2_PACKAGE_GNURADIO && BR2_PACKAGE_ARMADILLO)
+
+config BR2_PACKAGE_GNSS_SDR
+	bool "gnss-sdr"
+	depends on BR2_INSTALL_LIBSTDCPP
+	depends on !BR2_STATIC_LIBS
+	depends on BR2_TOOLCHAIN_HAS_THREADS_NPTL
+	depends on BR2_TOOLCHAIN_USES_GLIBC # clapack
+	depends on BR2_USE_WCHAR # gnutls
+	depends on BR2_PACKAGE_ARMADILLO
+	depends on BR2_PACKAGE_GNURADIO
+	depends on BR2_PACKAGE_PROTOBUF_ARCH_SUPPORTS # protobuf
+	depends on BR2_PACKAGE_PYTHON3
+	select BR2_PACKAGE_BOOST_FILESYSTEM
+	select BR2_PACKAGE_BOOST_SERIALIZATION
+	select BR2_PACKAGE_CLAPACK
+	select BR2_PACKAGE_GFLAGS
+	select BR2_PACKAGE_GLOG
+	select BR2_PACKAGE_GNURADIO_ANALOG
+	select BR2_PACKAGE_GNURADIO_BLOCKS
+	select BR2_PACKAGE_GNURADIO_FFT
+	select BR2_PACKAGE_GNURADIO_FILTER
+	select BR2_PACKAGE_GNUTLS
+	select BR2_PACKAGE_GNUTLS_OPENSSL
+	select BR2_PACKAGE_LOG4CPP
+	select BR2_PACKAGE_MATIO
+	select BR2_PACKAGE_OPENSSL
+	select BR2_PACKAGE_PROTOBUF
+	select BR2_PACKAGE_PUGIXML
+
+	help
+	  GNU Radio block for interfacing with various radio hardware
+
+	  http://osmocom.org/projects/osmosdr
+
+if BR2_PACKAGE_GNSS_SDR
+
+config BR2_PACKAGE_GNSS_SDR_OSMOSDR
+	bool "enable osmosdr support"
+	select BR2_PACKAGE_GR_OSMOSDR
+	help
+	  Enable the use of OsmoSDR
+
+endif
