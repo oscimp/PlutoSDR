@@ -121,8 +121,12 @@ config BR2_PACKAGE_UHD_USRP2
 	help
 	  enable USRP2 support
 
+comment "uhd utils depends on python API support"
+	depends on !BR2_PACKAGE_UHD_PYTHON
+
 config BR2_PACKAGE_UHD_UTILS
 	bool "uhd-utils"
+	depends on BR2_PACKAGE_UHD_PYTHON
 	help
 	  uhd-utils
 
