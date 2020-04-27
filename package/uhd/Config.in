@@ -127,6 +127,7 @@ comment "uhd utils depends on python API support"
 config BR2_PACKAGE_UHD_UTILS
 	bool "uhd-utils"
 	depends on BR2_PACKAGE_UHD_PYTHON
+	select BR2_PACKAGE_PYTHON_SIX
 	help
 	  uhd-utils
 
