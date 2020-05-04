@@ -2,8 +2,8 @@ comment "gnss-sdr needs a toolchain w/ C++, NPTL, wchar, dynamic library"
 	depends on BR2_USE_MMU
 	depends on !BR2_INSTALL_LIBSTDCPP || !BR2_USE_WCHAR || \
 		!BR2_TOOLCHAIN_HAS_THREADS_NPTL || BR2_STATIC_LIBS
-comment "gnss-sdr needs gnuradio and armadillo"
-	depends on !(BR2_PACKAGE_GNURADIO && BR2_PACKAGE_ARMADILLO)
+comment "gnss-sdr needs python3, gnuradio and armadillo"
+	depends on !(BR2_PACKAGE_PYTHON3 && BR2_PACKAGE_GNURADIO && BR2_PACKAGE_ARMADILLO)
 
 config BR2_PACKAGE_GNSS_SDR
 	bool "gnss-sdr"
