@@ -40,10 +40,27 @@ config BR2_PACKAGE_GNSS_SDR
 
 if BR2_PACKAGE_GNSS_SDR
 
+config BR2_PACKAGE_GNSS_SDR_AD9361
+	bool "enable AD9361 support"
+	select BR2_PACKAGE_LIBIIO_PLUTO
+	help
+	  Enable the use of AD9361
+
 config BR2_PACKAGE_GNSS_SDR_OSMOSDR
 	bool "enable osmosdr support"
 	select BR2_PACKAGE_GR_OSMOSDR
 	help
 	  Enable the use of OsmoSDR
 
+config BR2_PACKAGE_GNSS_SDR_UHD
+	bool "enable UHD support"
+	depends on BR2_PACKAGE_UHD
+	help
+	  Enable the use of UHD
+
+config BR2_PACKAGE_GNSS_SDR_PLUTOSDR
+	bool "enable PlutoSDR support"
+	select BR2_PACKAGE_GR_IIO
+	help
+	  Enable the use of UHD
 endif
