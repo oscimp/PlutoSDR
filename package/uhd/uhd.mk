@@ -102,7 +102,7 @@ UHD_CONF_OPTS += -DENABLE_RFNOC=OFF
 endif
 
 ifeq ($(BR2_PACKAGE_UHD_PYTHON),y)
-UHD_DEPENDENCIES += host-python-numpy host-python-requests python-numpy python-requests
+UHD_DEPENDENCIES += host-python-numpy host-python3-requests python-numpy python-requests
 UHD_CONF_OPTS += -DENABLE_PYTHON_API=ON
 else
 UHD_CONF_OPTS += -DENABLE_PYTHON_API=OFF
