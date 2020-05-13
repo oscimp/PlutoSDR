@@ -1,9 +1,11 @@
-comment "gnss-sdr needs a toolchain w/ C++, NPTL, wchar, dynamic library"
+comment "gnss-sdr needs a toolchain w/ C++, fortran, NPTL, wchar, dynamic library"
 	depends on BR2_USE_MMU
 	depends on !BR2_INSTALL_LIBSTDCPP || !BR2_USE_WCHAR || \
 		!BR2_TOOLCHAIN_HAS_THREADS_NPTL || BR2_STATIC_LIBS
 comment "gnss-sdr needs python3, gnuradio and armadillo"
 	depends on !(BR2_PACKAGE_PYTHON3 && BR2_PACKAGE_GNURADIO && BR2_PACKAGE_ARMADILLO)
+comment "gnss-sdr can't work with clapack"
+	depends on BR2_PACKAGE_CLAPACK
 
 config BR2_PACKAGE_GNSS_SDR
 	bool "gnss-sdr"
@@ -18,7 +20,6 @@ config BR2_PACKAGE_GNSS_SDR
 	depends on BR2_PACKAGE_PYTHON3
 	select BR2_PACKAGE_BOOST_FILESYSTEM
 	select BR2_PACKAGE_BOOST_SERIALIZATION
-	select BR2_PACKAGE_CLAPACK
 	select BR2_PACKAGE_GFLAGS
 	select BR2_PACKAGE_GLOG
 	select BR2_PACKAGE_GNURADIO_ANALOG
@@ -27,6 +28,7 @@ config BR2_PACKAGE_GNSS_SDR
 	select BR2_PACKAGE_GNURADIO_FILTER
 	select BR2_PACKAGE_GNUTLS
 	select BR2_PACKAGE_GNUTLS_OPENSSL
+	select BR2_PACKAGE_LAPACK
 	select BR2_PACKAGE_LOG4CPP
 	select BR2_PACKAGE_MATIO
 	select BR2_PACKAGE_OPENSSL
@@ -58,9 +60,10 @@ config BR2_PACKAGE_GNSS_SDR_UHD
 	help
 	  Enable the use of UHD
 
+comment "PlutoSDR support for gnss-sdr needs gr-iio"
 config BR2_PACKAGE_GNSS_SDR_PLUTOSDR
 	bool "enable PlutoSDR support"
-	select BR2_PACKAGE_GR_IIO
+	depends on BR2_PACKAGE_GR_IIO
 	help
 	  Enable the use of UHD
 endif

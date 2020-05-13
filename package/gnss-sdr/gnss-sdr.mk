@@ -12,7 +12,7 @@ GNSS_SDR_LICENSE_FILES = COPYING
 # gnss-sdr prevents doing an in-source-tree build
 GNSS_SDR_SUPPORTS_IN_SOURCE_BUILD = NO
 
-GNSS_SDR_DEPENDENCIES = armadillo boost openssl clapack \
+GNSS_SDR_DEPENDENCIES = armadillo boost openssl lapack \
 	gflags glog log4cpp gnuradio gnutls matio protobuf pugixml
 
 GNSS_SDR_CONF_OPTS += \
