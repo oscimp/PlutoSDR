@@ -191,13 +191,34 @@ the following chart:
 
 \includegraphics[width=\linewidth]{target}
 
+The generated Python script will be transfered and run on the RPi platform. Make sure
+to adapt the 0-MQ TCP IP address to the RPi address: the server is running on the local board
+and being a Publish-Subscribe (like UDP broadcast) configuration, any client connecting to
+the server running on the local board will be streamed the dataflow. The IP address must
+match the subnet of the host PC for easier routing configuration and the port might be
+anything above 1024. The only constraints on this flowgraph is to achieve a final sampling
+rate matching the PC sound card sampling rate (here 48~kHz) following an integer decimation,
+here tuned with a sampling rate of $48\time 24$~kS/s. The first low-pass filter selects
+a unique FM broadcast station while still keeping enough bandwidth ($\geq$200~kHz) for
+wideband FM demodulation, and the FM demodulator add the second decimation stage.
+
 \section{Communication RPi to PC}
 
-Process signal collected from the FM broadcast band on the RPi, preprocess
-on the embedded target board, and send the audio stream to the PC.
+After processing the raw RF (I/Q) signal collected from the FM broadcast band on the RPi, 
+and preprocessing FM demodulation on the embedded target board, the audio stream is
+sent PC over 0-MQ.
 
 \begin{center}
-\includegraphics[width=.5\linewidth]{host}
+\includegraphics[width=.59\linewidth]{host}
+\includegraphics[width=.39\linewidth]{IMG_20200527_211928small.jpg}
+}
+\footnotesize{Left: client flowchart, fetching a 0-MQ subscribe datastream and feeding
+the sound card of the host PC. Right: experimental testbed, with the RPi4 connected
+though virtual serial port and Ethernet to the laptop PC. The RPi4 collects an I/Q stream
+from the DVB-T dongle tuned to an FM-broadcast station, streams the demodulated audio
+flow to the PC, allowing to listen to the program on the headset connected to the sound card
+output. Not heard on this figure is the excellent sound quality heard on the headset, demonstrating
+perfect functional capability of this setup.}
 \end{center}
 
 \section{Software development}
