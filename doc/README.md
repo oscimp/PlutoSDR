@@ -92,7 +92,7 @@ microSD card holding the operating system to be run on the RPi. Here,
 binary file to the storage medium. Such an operation is achieved under
 GNU/Linux with the Disk Dump <span>dd</span> command.
 
-![image](danger) The following line might definitely <span>**corrupt a
+/!\ The following line might definitely <span>**corrupt a
 hard disk**</span> if the wrong storage medium is selected. Alway
 <span>**check**</span> the name of the peripheral associated with the SD
 card (`dmesg | tail`) before running the <span>dd</span> command.
@@ -216,7 +216,7 @@ for playing on the sound card.
 On the host computer, run GNU Radio Companion (as part of GNU Radio 3.8)
 and generate the following chart:
 
-![image](target)
+![image](target.png)
 
 The generated Python script will be transfered and run on the RPi
 platform. Make sure to adapt the 0-MQ TCP IP address to the RPi address:
@@ -239,7 +239,7 @@ After processing the raw RF (I/Q) signal collected from the FM broadcast
 band by the RPi, and preprocessing FM demodulation on the embedded
 target board, the audio stream is sent PC over 0-MQ.
 
-![image](host) ![image](IMG_20200527_211928small.jpg) <span>Left: client
+![image](host.png) ![image](IMG_20200527_211928small.jpg) <span>Left: client
 flowchart, fetching a 0-MQ subscribe datastream and feeding the sound
 card of the host PC. Right: experimental testbed, with the RPi4
 connected though virtual serial port and Ethernet to the laptop PC. The
