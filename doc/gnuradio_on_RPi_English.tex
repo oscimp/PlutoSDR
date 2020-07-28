@@ -64,7 +64,7 @@ the documentation on this web page is not up to date (?!):
 \item {\tt cd buildroot}
 \item {\tt make raspberrypi4\_64\_defconfig}
 \end{enumerate}
-fetches the Buildroot archive, and configures for the Redpitaya4 in 64~bit mode (obviously
+fetches the Buildroot archive, and configures for the RaspberryPi4 in 64~bit mode (obviously
 for RPi3, select {\tt raspberrypi3\_64\_defconfig}).
 Because Python support for GNU Radio will require the {\tt glibc} library rather than the default
 {\tt uClibc}, we must tune the default configuration
@@ -109,7 +109,7 @@ the SD card (\verb~dmesg | tail~) before running the {\tt dd} command.
 The image resulting from Buildroot compilation is transfered to the microSD card with\\
 \colorbox{white}{\begin{minipage}{0.9\textwidth}
 sudo dd if=output/images/sdcard.img of=/dev/sdc
-\end{minipage}} 
+\end{minipage}} \\
 where we have on purpose selected the {\tt /dev/sdc} peripheral name in this example
 since it is ever hardly used. Usually, the microSD card is accessed as {\tt /dev/sdb} 
 (second hard disk storage medium compatible with the Linux SCSI driver)
@@ -129,33 +129,22 @@ is a VFAT (format compatible with Microsoft Windows) with the devicetree, the Li
 kernel and the bootloader, and a second one holding the GNU/Linux userspace filesystem
 ({\tt rootfs}).
 
-\section{Adding custom packages (GNU Radio and PlutoSDR/UHD}
+This basic image is missing basic functionalities such as secure network connection over 
+{\tt ssh} or text editing on the remote target. We find most convenient to activate
+{\tt Target Packages}$\rightarrow${\tt Text editors and viewers}$\rightarrow${\tt nano} as
+text editor, {\tt Target Packages}$\rightarrow${\tt Shell and utilities}$\rightarrow${\tt screen}
+and {\tt Target Packages}$\rightarrow${\tt Networking applications}$\rightarrow${\tt dropbear}
+as {\tt ssh} server. Since Dropbear expects a password when logging in the target system,
+we must define the {\tt root} password (and not leave it empty as is the default configuration)
+using {\tt System configuration}$\rightarrow${\tt Root password}
+
+\section{Adding packages (GNU Radio)}
 
 So far we have compiled a standard Buildroot image without dedicated GNU Radio support.
 Dedicated packages not selected in the default configuration can be activated. This is 
 achieved from the Buildroot directory with {\tt make menuconfig} and selecting {\tt Target 
 packages}. Searching (``/'' command as in {\tt vi}) allows for quickly finding the appropriate
 package, such as GNU Radio. 
-
-So far we have only worked with ``official'' Buildroot packages properly maintained by
-the Buildroot community. Some packages are not yet integrated in the official repository
-but can nevertheless be appended as external packages thanks to the {\tt BR2\_EXTERNAL}
-mechanism. As an example of supporting the PlutoSDR thanks to {\tt gr-iio}, this support
-is available thanks to the {\tt BR2\_EXTERNAL} repository found at 
-\url{https://github.com/oscimp/PlutoSDR} and most significantly its {\tt for\_next} branch.
-Hence, after going to a any directory out of the Buildroot source tree:
-\begin{enumerate}
-\item \verb~git clone https://github.com/oscimp/PlutoSDR~
-\item \verb~cd PlutoSDR~
-\item \verb~git checkout for_next~
-\item \verb~source sourceme.ggm~
-\end{enumerate}
-
-Now that the {\tt BR2\_EXTERNAL} has been cloned, the appropriate branch selected, and the
-environment variables set (last command), return in the Buildroot directory and
-{\tt make menuconfig}. Running {\tt make menuconfig} will now show a new menu named 
-{\tt External options} including
-{\tt gr-iio}, {\tt libuhd} or {\tt gnss-sdr}. 
 
 \begin{enumerate}
 \item \verb~make menuconfig~
@@ -170,20 +159,66 @@ replace {\tt /dev management} with {\tt Dynamic using devtmpfs + eudev}
 and {\tt python support})
 \item \verb~/osmosdr~
 \item Select {\tt BR2\_PACKAGE\_GR\_OSMOSDR} (with Python support and Osmocom RTLSDR support)
-\item in {\tt External options} select {\tt uhd} and for the B210 {\tt b200 support} and 
-{\tt python API support}, 
-\item in {\tt External options} select {\tt gr-iio} for PlutoSDR support.
 \end{enumerate}
 
 The resulting file will be about 550~MB, requiring increasing the configuration in {\tt .config}
-with {\tt BR2\_TARGET\_ROOTFS\_EXT2\_SIZE="420M"}.
+with {\tt BR2\_TARGET\_ROOTFS\_EXT2\_SIZE="1000M"}.
+
+Tuning the configuration prior to {\tt dd} the SD card is possible by adding files
+in {\tt output/target}, e.g. a {\tt etc/network/interfaces} network configuration with
+a static IP for example, or copying the USRP firmware from the host PC in the
+{\tt usr/share/uhd/images} subdirectory of {\tt output/target} for these files to be
+available later on the target embedded board. After tuning the content of {\tt output/target},
+execute {\tt make} in the Buildroot directory to re-build the {\tt output/images/sdcard.img}
+file.
+
+Finally, a graphical display of Python processing results can be activated using
+{\tt matplotlib} which depends on Qt5: first activate {\tt BR2\_PACKAGE\_QT5} (accessible
+from {\tt Graphic libraries and applications} in {\tt Target packages}): now the
+{\tt qt display} option from {\tt python-matplotlib} in {\tt External python modules} is
+active and both should be selected.
+
+\section{Adding custom packages (gnss-sdr, PlutoSDR/UHD)}
+
+Up to now we have only worked with ``official'' Buildroot packages properly maintained by
+the Buildroot community. Some packages are not yet integrated in the official repository
+but can nevertheless be appended as external packages thanks to the {\tt BR2\_EXTERNAL}
+mechanism. As an example of supporting the PlutoSDR thanks to {\tt gr-iio}, this support
+is available thanks to the {\tt BR2\_EXTERNAL} repository found at 
+\url{https://github.com/oscimp/PlutoSDR} and most significantly its {\tt for\_next} branch.
+Hence, after going to any directory out of the Buildroot source tree:
+\begin{enumerate}
+\item \verb~git clone https://github.com/oscimp/PlutoSDR~
+\item \verb~cd PlutoSDR~
+\item \verb~git checkout for_next~
+\item \verb~source sourceme.ggm~
+\end{enumerate}
+
+Now that the {\tt BR2\_EXTERNAL} has been cloned, the appropriate branch selected, and the
+environment variables set (last command), return to the Buildroot directory and
+{\tt make menuconfig}. Running {\tt make menuconfig} will now show a new menu named 
+{\tt External options} including
+{\tt gr-iio}, {\tt libuhd}:
+\begin{itemize}
+\item in {\tt External options} select {\tt uhd} and for the B210 {\tt b200 support} and 
+{\tt python API support}, 
+\item in {\tt External options} select {\tt gr-iio} for PlutoSDR support.
+\end{itemize}
+
+Including {\tt gnss-sdr} requires activating Fortran in the Toolchain options for compiling 
+Lapack which as needed for Armadillo, a dependence to {\tt gnss-sdr} ({\tt clapack} will not work 
+with {\tt gnss-sdr}).
+
+Controlling the Raspberry Pi 4 GPIO is most easily achieved using the PiGPIO library, whose
+functioalitities are activated by setting {\tt PIGPIO} and {\tt PYTHON3\_PIGPIO} for calling
+from Python3 scripts.
 
 \section{GNU Radio on RPi}
 
 As a demonstration of the proper operation of GNU Radio on the embedded board, we
-generate using GNU Radio Companion a command line interface (``No GUI'') processing flow 
+generate using GNU Radio Companion on the host computer a command line interface (``No GUI'') processing flow 
 since obviously no graphical interface is running on the embedded target, and will execute 
-the resulting Python3 script on the Raspberry Pi4. The audio stream resulting from broadcast
+the resulting Python3 script on the Raspberry Pi. The audio stream resulting from broadcast
 FM demodulation will be streamed to the host PC for playing on the sound card.
 
 On the host computer, run GNU Radio Companion (as part of GNU Radio 3.8) and generate
@@ -192,26 +227,26 @@ the following chart:
 \includegraphics[width=\linewidth]{target}
 
 The generated Python script will be transfered and run on the RPi platform. Make sure
-to adapt the 0-MQ TCP IP address to the RPi address: the server is running on the local board
+to adapt the 0-MQ TCP IP address to the RPi address: the server is running on the embedded board
 and being a Publish-Subscribe (like UDP broadcast) configuration, any client connecting to
-the server running on the local board will be streamed the dataflow. The IP address must
-match the subnet of the host PC for easier routing configuration and the port might be
+the server running on the embedded board will be streamed the dataflow. The IP address must
+match the subnet of the host PC for easier routing configuration, and the port might be
 anything above 1024. The only constraints on this flowgraph is to achieve a final sampling
 rate matching the PC sound card sampling rate (here 48~kHz) following an integer decimation,
-here tuned with a sampling rate of $48\time 24$~kS/s. The first low-pass filter selects
+here tuned with an initial sampling rate of $48\time 24$~kS/s. The first low-pass filter selects
 a unique FM broadcast station while still keeping enough bandwidth ($\geq$200~kHz) for
 wideband FM demodulation, and the FM demodulator add the second decimation stage.
 
 \section{Communication RPi to PC}
 
-After processing the raw RF (I/Q) signal collected from the FM broadcast band on the RPi, 
+After processing the raw RF (I/Q) signal collected from the FM broadcast band 
+by the RPi, 
 and preprocessing FM demodulation on the embedded target board, the audio stream is
 sent PC over 0-MQ.
 
 \begin{center}
-\includegraphics[width=.59\linewidth]{host}
-\includegraphics[width=.39\linewidth]{IMG_20200527_211928small.jpg}
-}
+\includegraphics[width=.65\linewidth]{host}
+\includegraphics[width=.33\linewidth]{IMG_20200527_211928small.jpg}
 \footnotesize{Left: client flowchart, fetching a 0-MQ subscribe datastream and feeding
 the sound card of the host PC. Right: experimental testbed, with the RPi4 connected
 though virtual serial port and Ethernet to the laptop PC. The RPi4 collects an I/Q stream
@@ -224,8 +259,11 @@ perfect functional capability of this setup.}
 \section{Software development}
 
 We are interested in tuning the {\tt gnss-sdr} functionalities. The source code of
-the software has been downloaded in the {\tt output/build} directory. The build directory 
-for the target system is found in {\tt output/build/gnss-sdr-0.0.12/buildroot-build/} while
+the software has been downloaded in the {\tt output/build} directory if
+selected and installed. The build directory 
+for the target system is found in \\
+{\tt output/build/gnss-sdr-0.0.12/buildroot-build/} 
+\\while
 a separate {\tt output/build/gnss-sdr-0.0.12/build} allows for simultaneously testing source
 code modifications on the host PC. The output of compiling ({\tt make}), either in 
 {\tt buildroot-build} (ARM target) or {\tt build} (x86 target), is found in {\tt 
