@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-GNSS_SDR_VERSION = 0.0.12
+GNSS_SDR_VERSION = 0.0.13
 GNSS_SDR_SITE = $(call github,gnss-sdr,gnss-sdr,v$(GNSS_SDR_VERSION))
 GNSS_SDR_LICENSE = GPL-3.0+
 GNSS_SDR_LICENSE_FILES = COPYING
