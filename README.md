@@ -13,6 +13,8 @@ This support has been tested with the latest stable release of buildroot (2018.1
 How-to use it
 =============
 
+A ready-to-use image is available for the Raspberry Pi 4 at http://jmfriedt.org/sdcard.img including GNU Radio 3.8 and Qt5 support. Login=root, password=root.
+
 ### With *PlutoSDR* tag **v2019.02**
 
 Download the tested buildroot tarball:
