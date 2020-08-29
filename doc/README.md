@@ -58,8 +58,7 @@ default <span>uClibc</span>, we must tune the default configuration
 
 4.  <span>make menuconfig</span>
 
-5.  Toolchain \(\rightarrow\) C library (uClibc-ng) \(\rightarrow\)
-    glibc
+5.  Toolchain -> C library (uClibc-ng) -> glibc
 
 6.  Exit
 
