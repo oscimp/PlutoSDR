@@ -58,8 +58,7 @@ default <span>uClibc</span>, we must tune the default configuration
 
 4.  <span>make menuconfig</span>
 
-5.  Toolchain \(\rightarrow\) C library (uClibc-ng) \(\rightarrow\)
-    glibc
+5.  Toolchain -> C library (uClibc-ng) -> glibc
 
 6.  Exit
 
@@ -256,8 +255,8 @@ We are interested in tuning the <span>gnss-sdr</span> functionalities.
 The source code of the software has been downloaded in the
 <span>output/build</span> directory if selected and installed. The build
 directory for the target system is found in
-<span>output/build/gnss-sdr-0.0.12/buildroot-build/</span> while a
-separate <span>output/build/gnss-sdr-0.0.12/build</span> allows for
+<span>output/build/gnss-sdr-0.0.13/buildroot-build/</span> while a
+separate <span>output/build/gnss-sdr-0.0.13/build</span> allows for
 simultaneously testing source code modifications on the host PC. The
 output of compiling (<span>make</span>), either in
 <span>buildroot-build</span> (ARM target) or <span>build</span> (x86

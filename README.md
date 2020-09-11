@@ -13,6 +13,8 @@ This support has been tested with the latest stable release of buildroot (2018.1
 How-to use it
 =============
 
+A ready-to-use image is available for the Raspberry Pi 4 at http://jmfriedt.org/sdcard.img including GNU Radio 3.8 and Qt5 support. Login=root, password=root.
+
 ### With *PlutoSDR* tag **v2019.02**
 
 Download the tested buildroot tarball:
@@ -85,3 +87,14 @@ Customizing the PL bitstream meets some requirement for full control of the Plut
 audio output is added to make the PlutoSDR a fully autonomous FM-broadcast radio receiver. Adding such functionalities
 requires generating a new bitstream including the additional block, generating a new DFU image to send to the PlutoSDR,
 and telling GNU/Linux about the new reconfigurable hardware (devicetree entry). The [documentation](https://github.com/oscimp/oscimpDigital/blob/master/doc/tutorials/plutosdr/99-gnuradio-audio/1-gnuradio-audio.pdf) aims at describing all these steps.
+
+gnss-sdr on embedded platforms
+==============================
+
+The BR2_EXTERNAL includes in the for_next branch packages that are not (yet) officially integrated in Buildroot,
+including UHD (USRP Hardware Device from Ettus Research). Because this package is not officially integrated in Buildroot,
+support for UHD in GNU Radio (which is officially supported in Buildroot) requires tuning the gnuradio package
+configuration. In ``package/gnuradio/gnuradio.mk`` of the official Buildroot release, add ``-DENABLE_GR_UHD=ON``
+to the ``GNURADIO_CONF_OPTS`` variable. If GNU Radio was already compiled before setting this option, then
+``make gnuradio-reconfigure``. This option is mandatory for activating UHD support in gnss-sdr as well for live decoding
+GNSS messages received by an USRP (e.g. B210).
