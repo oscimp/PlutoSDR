@@ -1,0 +1,56 @@
+diff --git a/package/armadillo/Config.in b/package/armadillo/Config.in
+index b2b61a3233..bfc7b4629e 100644
+--- a/package/armadillo/Config.in
++++ b/package/armadillo/Config.in
+@@ -1,4 +1,4 @@
+-comment "armadillo needs a toolchain w/ C++"
++comment "armadillo needs a toolchain w/ C++, fortran"
+ 	depends on !BR2_INSTALL_LIBSTDCPP
+ 	depends on !BR2_powerpc
+ 	depends on !BR2_m68k_cf
+@@ -10,9 +10,9 @@ comment "armadillo needs a glibc toolchain w/ C++"
+ config BR2_PACKAGE_ARMADILLO
+ 	bool "armadillo"
+ 	depends on BR2_INSTALL_LIBSTDCPP
+-	depends on !BR2_powerpc || BR2_TOOLCHAIN_USES_GLIBC # clapack
+-	depends on !BR2_m68k_cf # clapack
+-	select BR2_PACKAGE_CLAPACK
++	depends on BR2_TOOLCHAIN_HAS_FORTRAN
++	depends on !BR2_powerpc || BR2_TOOLCHAIN_USES_GLIBC # lapack
++	select BR2_PACKAGE_LAPACK
+ 	help
+ 	  Armadillo: An Open Source C++ Linear Algebra Library for
+ 	  Fast Prototyping and Computationally Intensive Experiments.
+diff --git a/package/armadillo/armadillo.mk b/package/armadillo/armadillo.mk
+index f693d8c946..7cc2cece75 100644
+--- a/package/armadillo/armadillo.mk
++++ b/package/armadillo/armadillo.mk
+@@ -7,7 +7,7 @@
+ ARMADILLO_VERSION = 9.850.1
+ ARMADILLO_SOURCE = armadillo-$(ARMADILLO_VERSION).tar.xz
+ ARMADILLO_SITE = https://downloads.sourceforge.net/project/arma
+-ARMADILLO_DEPENDENCIES = clapack
++ARMADILLO_DEPENDENCIES = lapack
+ ARMADILLO_INSTALL_STAGING = YES
+ ARMADILLO_LICENSE = Apache-2.0
+ ARMADILLO_LICENSE_FILES = LICENSE.txt
+diff --git a/package/gnuradio/gnuradio.mk b/package/gnuradio/gnuradio.mk
+index 4d69de8dd1..5308a962e1 100644
+--- a/package/gnuradio/gnuradio.mk
++++ b/package/gnuradio/gnuradio.mk
+@@ -26,6 +26,7 @@ GNURADIO_DEPENDENCIES = \
+ 	host-swig \
+ 	boost \
+ 	log4cpp \
++	uhd \
+ 	gmp
+ 
+ GNURADIO_CONF_OPTS = \
+@@ -33,6 +34,7 @@ GNURADIO_CONF_OPTS = \
+ 	-DENABLE_DEFAULT=OFF \
+ 	-DENABLE_VOLK=ON \
+ 	-DENABLE_GNURADIO_RUNTIME=ON \
++	-DENABLE_GR_UHD=ON \
+ 	-DENABLE_TESTING=OFF \
+ 	-DENABLE_GR_QTGUI=OFF \
+ 	-DXMLTO_EXECUTABLE=NOTFOUND
