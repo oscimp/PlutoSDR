@@ -1,0 +1,12 @@
+config BR2_PACKAGE_VXI11
+	bool "vxi11"
+	depends on BR2_TOOLCHAIN_HAS_THREADS # libtirpc
+	select BR2_PACKAGE_LIBTIRPC
+	help
+	  RPC protocol for communicating with VXI11-enabled devices over
+	  ehternet from Linux (including instruments such as oscillos
+
+	  http://optics.eee.nottingham.ac.uk/vxi11/
+
+comment "vxi11 needs a toolchain w/ threads"
+	depends on !BR2_TOOLCHAIN_HAS_THREADS
