@@ -61,9 +61,11 @@ config BR2_PACKAGE_GNSS_SDR_UHD
 	  Enable the use of UHD
 
 comment "PlutoSDR support for gnss-sdr needs gr-iio"
+	depends on !BR2_PACKAGE_GR_IIO
+
 config BR2_PACKAGE_GNSS_SDR_PLUTOSDR
 	bool "enable PlutoSDR support"
 	depends on BR2_PACKAGE_GR_IIO
 	help
-	  Enable the use of UHD
+	  Enable the use of PlutoSDR
 endif

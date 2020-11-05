@@ -1,4 +1,6 @@
 comment "gr-iio needs gnuradio w/ python support"
+	depends on !BR2_PACKAGE_GNURADIO_PYTHON
+
 config BR2_PACKAGE_GR_IIO
 	bool "gr-iio"
 	depends on BR2_PACKAGE_GNURADIO
