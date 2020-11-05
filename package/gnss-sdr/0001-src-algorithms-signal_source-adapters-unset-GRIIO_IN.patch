@@ -1,0 +1,27 @@
+From 3160d39accfa4e9d84896f7ba1728cf4d8f68738 Mon Sep 17 00:00:00 2001
+From: Gwenhael Goavec-Merou <gwenhael.goavec-merou@trabucayre.com>
+Date: Thu, 5 Nov 2020 16:55:15 +0100
+Subject: [PATCH] src/algorithms/signal_source/adapters: unset
+ GRIIO_INCLUDE_HAS_GNURADIO
+
+Signed-off-by: Gwenhael Goavec-Merou <gwenhael.goavec-merou@trabucayre.com>
+---
+ src/algorithms/signal_source/adapters/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/algorithms/signal_source/adapters/CMakeLists.txt b/src/algorithms/signal_source/adapters/CMakeLists.txt
+index c007652cc..7e8aee367 100644
+--- a/src/algorithms/signal_source/adapters/CMakeLists.txt
++++ b/src/algorithms/signal_source/adapters/CMakeLists.txt
+@@ -228,7 +228,7 @@ endif()
+ if(ENABLE_PLUTOSDR OR ENABLE_FMCOMMS2)
+     if(GR_IIO_INCLUDE_HAS_GNURADIO)
+         target_compile_definitions(signal_source_adapters
+-            PUBLIC -DGRIIO_INCLUDE_HAS_GNURADIO=1
++            PUBLIC -DGRIIO_INCLUDE_HAS_GNURADIO=0
+         )
+     endif()
+     if(GNURADIO_API_IIO)
+-- 
+2.26.2
+
