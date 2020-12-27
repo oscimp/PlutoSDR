@@ -1,0 +1,70 @@
+From c9c2e95be2b405ef896afc8016f30bc873577b23 Mon Sep 17 00:00:00 2001
+From: Travis Collins <travis.collins@analog.com>
+Date: Thu, 22 Mar 2018 19:46:31 -0400
+Subject: [PATCH 2/3] Added cleanup of overflow check thread once block is
+ destroyed
+
+Signed-off-by: Travis Collins <travis.collins@analog.com>
+---
+ lib/fmcomms2_source_impl.cc | 18 ++++++++++++++++--
+ lib/fmcomms2_source_impl.h  |  1 +
+ 2 files changed, 17 insertions(+), 2 deletions(-)
+
+diff --git a/lib/fmcomms2_source_impl.cc b/lib/fmcomms2_source_impl.cc
+index 2b7183f..9cb60df 100644
+--- a/lib/fmcomms2_source_impl.cc
++++ b/lib/fmcomms2_source_impl.cc
+@@ -145,14 +145,24 @@ namespace gr {
+     }
+ 
+ 
++    fmcomms2_source_impl::~fmcomms2_source_impl()
++    {
++	    overflow_thd.join();
++    }
++
+     void fmcomms2_source_impl::check_overflow(void)
+     {
+ 	    uint32_t status;
+ 	    int ret;
+ 
+ 	    // Wait for stream startup
+-	    while(thread_stopped) {sleep(1);}
+-	    sleep(1);
++#ifdef _WIN32
++	    while(thread_stopped) {Sleep(1);}
++	    Sleep(1);
++#else
++	    while(thread_stopped) {usleep(1000);}
++	    usleep(1000);
++#endif
+ 
+ 	    // Clear status registers
+ 	    iio_device_reg_write(dev, 0x80000088, 0x6);
+@@ -167,7 +177,11 @@ namespace gr {
+ 			    // Clear status registers
+ 			    iio_device_reg_write(dev, 0x80000088, 0x6);
+ 		    }
++#ifdef _WIN32
++		    Sleep(1);
++#else
+ 		    usleep(1000);
++#endif
+ 	    }
+ 
+     }
+diff --git a/lib/fmcomms2_source_impl.h b/lib/fmcomms2_source_impl.h
+index 34a781b..de72e12 100644
+--- a/lib/fmcomms2_source_impl.h
++++ b/lib/fmcomms2_source_impl.h
+@@ -54,6 +54,7 @@ namespace gr {
+ 		    const char *gain2, double gain2_value,
+ 		    const char *rf_port_select, const char *filter,
+ 		    bool auto_filter);
++      ~fmcomms2_source_impl();
+ 
+       void set_params(unsigned long long frequency,
+ 		      unsigned long samplerate, unsigned long bandwidth,
+-- 
+2.26.2
+

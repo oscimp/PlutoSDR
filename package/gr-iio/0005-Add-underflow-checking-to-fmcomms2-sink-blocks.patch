@@ -1,0 +1,110 @@
+From 56384e23cbc508ac6aa767e4b2fd64a5033001a4 Mon Sep 17 00:00:00 2001
+From: Travis Collins <travis.collins@analog.com>
+Date: Thu, 22 Mar 2018 20:50:16 -0400
+Subject: [PATCH 3/3] Add underflow checking to fmcomms2 sink blocks.
+
+Signed-off-by: Travis Collins <travis.collins@analog.com>
+---
+ lib/fmcomms2_sink_impl.cc   | 45 +++++++++++++++++++++++++++++++++++++
+ lib/fmcomms2_sink_impl.h    |  8 ++++++-
+ lib/fmcomms2_source_impl.cc |  2 +-
+ 3 files changed, 53 insertions(+), 2 deletions(-)
+
+Index: gr-iio-d6d1f6ac7db5be3eb990ee8ef78bb65cf3a15dd7/lib/fmcomms2_sink_impl.cc
+===================================================================
+--- gr-iio-d6d1f6ac7db5be3eb990ee8ef78bb65cf3a15dd7.orig/lib/fmcomms2_sink_impl.cc
++++ gr-iio-d6d1f6ac7db5be3eb990ee8ef78bb65cf3a15dd7/lib/fmcomms2_sink_impl.cc
+@@ -131,6 +131,50 @@ namespace gr {
+     {
+ 	    set_params(frequency, samplerate, bandwidth, rf_port_select,
+ 			    attenuation1, attenuation2, filter, auto_filter);
++
++	    stop_thread = false;
++	    underflow_thd = boost::thread(&fmcomms2_sink_impl::check_underflow, this);
++    }
++
++    fmcomms2_sink_impl::~fmcomms2_sink_impl()
++    {
++	    boost::unique_lock<boost::mutex> lock(uf_mutex);
++            stop_thread = true;
++	    lock.unlock();
++	    underflow_thd.join();
++
++    }
++
++    void fmcomms2_sink_impl::check_underflow(void)
++    {
++	    uint32_t status;
++	    int ret;
++	    boost::unique_lock<boost::mutex> lock(uf_mutex, boost::defer_lock);
++
++	    // Clear status registers
++	    iio_device_reg_write(dev, 0x80000088, 0x6);
++
++	    for (;;) {
++		    ret = iio_device_reg_read(dev, 0x80000088, &status);
++		    if (ret) {
++			    throw std::runtime_error("Failed to read underflow status register");
++		    }
++		    if (status & 1) {
++			    printf("U");
++			    // Clear status registers
++			    iio_device_reg_write(dev, 0x80000088, 1);
++		    }
++#ifdef _WIN32
++		    Sleep(1);
++#else
++		    usleep(1000);
++#endif
++		    lock.lock();
++		    if (stop_thread)
++			    break;
++		    lock.unlock();
++	    }
++
+     }
+ 
+     void fmcomms2_sink_impl::set_single_param(std::string paramname, long long val)
+Index: gr-iio-d6d1f6ac7db5be3eb990ee8ef78bb65cf3a15dd7/lib/fmcomms2_sink_impl.h
+===================================================================
+--- gr-iio-d6d1f6ac7db5be3eb990ee8ef78bb65cf3a15dd7.orig/lib/fmcomms2_sink_impl.h
++++ gr-iio-d6d1f6ac7db5be3eb990ee8ef78bb65cf3a15dd7/lib/fmcomms2_sink_impl.h
+@@ -35,11 +35,15 @@ namespace gr {
+     class fmcomms2_sink_impl : public fmcomms2_sink, public device_sink_impl
+     {
+      private:
+-      bool cyclic;
++      bool cyclic, stop_thread;
++      boost::mutex uf_mutex;
++      boost::thread underflow_thd;
+ 
+       std::vector<std::string> get_channels_vector(
+ 		      bool ch1_en, bool ch2_en, bool ch3_en, bool ch4_en);
+ 
++      void check_underflow(void);
++
+      public:
+       fmcomms2_sink_impl(struct iio_context *ctx, bool destroy_ctx,
+ 		    unsigned long long frequency, unsigned long samplerate,
+@@ -50,6 +54,8 @@ namespace gr {
+ 		    double attenuation2, const char *filter,
+ 		    bool auto_filter);
+ 
++      ~fmcomms2_sink_impl();
++
+       int work(int noutput_items,
+ 		    gr_vector_const_void_star &input_items,
+ 		    gr_vector_void_star &output_items);
+Index: gr-iio-d6d1f6ac7db5be3eb990ee8ef78bb65cf3a15dd7/lib/fmcomms2_source_impl.cc
+===================================================================
+--- gr-iio-d6d1f6ac7db5be3eb990ee8ef78bb65cf3a15dd7.orig/lib/fmcomms2_source_impl.cc
++++ gr-iio-d6d1f6ac7db5be3eb990ee8ef78bb65cf3a15dd7/lib/fmcomms2_source_impl.cc
+@@ -175,7 +175,7 @@ namespace gr {
+ 		    if (status & 4) {
+ 			    printf("O");
+ 			    // Clear status registers
+-			    iio_device_reg_write(dev, 0x80000088, 0x6);
++			    iio_device_reg_write(dev, 0x80000088, 4);
+ 		    }
+ #ifdef _WIN32
+ 		    Sleep(1);
