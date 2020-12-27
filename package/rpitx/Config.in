@@ -1,0 +1,4 @@
+config BR2_PACKAGE_RPITX
+	bool "rpitx"
+	help
+	  RPiTX application

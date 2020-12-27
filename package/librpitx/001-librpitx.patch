@@ -1,0 +1,176 @@
+diff --git a/src/Makefile b/src/Makefile
+index 012c34e..85720e5 100644
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -1,14 +1,14 @@
+-CFLAGS = -Wall -O3 -Wno-unused-variable
+-CXXFLAGS = -std=c++11 -Wall -O3 -Wno-unused-variable -I /opt/vc/include 
+-LDFLAGS = -lm -lrt -lpthread -L/opt/vc/lib -lbcm_host
+-CCP = c++
+-CC = cc
++CFLAGS ?= -Wall -O3 -Wno-unused-variable
++CXXFLAGS ?= -std=c++11 -Wall -O3 -Wno-unused-variable -I /opt/vc/include 
++LDFLAGS ?= -lm -lrt -lpthread -L/opt/vc/lib -lbcm_host
++CXX ?= c++
++CC ?= cc
+ 
+ librpitx: librpitx.h gpio.h gpio.cpp dma.h dma.cpp mailbox.c raspberry_pi_revision.c fmdmasync.h fmdmasync.cpp ngfmdmasync.h ngfmdmasync.cpp dsp.h dsp.cpp iqdmasync.h iqdmasync.cpp serialdmasync.h serialdmasync.cpp phasedmasync.h phasedmasync.cpp fskburst.h fskburst.cpp ookburst.cpp ookburst.h atv.h atv.cpp util.h
+ 	#$(CC) $(CFLAGS) -c -o mailbox.o mailbox.c
+ 	$(CC) $(CFLAGS) -c -o raspberry_pi_revision.o raspberry_pi_revision.c
+-	$(CCP) $(CXXFLAGS) -c dsp.cpp iqdmasync.cpp ngfmdmasync.cpp fmdmasync.cpp  dma.cpp gpio.cpp serialdmasync.cpp phasedmasync.cpp amdmasync.h amdmasync.cpp fskburst.cpp ookburst.cpp atv.cpp util.cpp mailbox.c
+-	$(AR) rc librpitx.a dsp.o iqdmasync.o ngfmdmasync.o fmdmasync.o  dma.o gpio.o mailbox.o raspberry_pi_revision.o  serialdmasync.o phasedmasync.o amdmasync.o fskburst.o ookburst.o atv.o util.o mailbox.o
++	$(CXX) $(CXXFLAGS) -c pi64.c dsp.cpp iqdmasync.cpp ngfmdmasync.cpp fmdmasync.cpp  dma.cpp gpio.cpp serialdmasync.cpp phasedmasync.cpp amdmasync.h amdmasync.cpp fskburst.cpp ookburst.cpp atv.cpp util.cpp mailbox.c
++	$(AR) rc librpitx.a pi64.o dsp.o iqdmasync.o ngfmdmasync.o fmdmasync.o  dma.o gpio.o mailbox.o raspberry_pi_revision.o  serialdmasync.o phasedmasync.o amdmasync.o fskburst.o ookburst.o atv.o util.o mailbox.o
+ 
+ install: librpitx
+ 
+diff --git a/src/dma.cpp b/./src/dma.cpp
+index 2a55bc9..6055eaa 100644
+--- a/src/dma.cpp
++++ b/src/dma.cpp
+@@ -19,7 +19,8 @@ This program is free software: you can redistribute it and/or modify
+ #include "dma.h"
+ #include "stdio.h"
+ #include "util.h"
+-#include <bcm_host.h>
++#include "pi64.h"
++//#include <bcm_host.h>
+ 
+ extern "C"
+ {
+@@ -31,6 +32,37 @@ extern "C"
+ 
+ #define BUS_TO_PHYS(x) ((x)&~0xC0000000)
+ 
++/*
++//JMF
++static unsigned get_dt_ranges(const char *filename, unsigned offset)
++{
++   unsigned address = ~0;
++   FILE *fp = fopen(filename, "rb");
++   if (fp)
++   {
++      unsigned char buf[4];
++      fseek(fp, offset, SEEK_SET);
++      if (fread(buf, 1, sizeof buf, fp) == sizeof buf)
++         address = buf[0] << 24 | buf[1] << 16 | buf[2] << 8 | buf[3] << 0;
++      fclose(fp);
++   }
++   return address;
++}
++
++unsigned bcm_host_get_peripheral_address(void)
++{
++   unsigned address = get_dt_ranges("/proc/device-tree/soc/ranges", 4);
++   return address == ~0 ? 0x20000000 : address;
++}
++
++unsigned bcm_host_get_sdram_address(void)
++{
++    unsigned address = get_dt_ranges("/proc/device-tree/axi/vc_mem/reg", 8);
++    return address == ~0 ? 0x40000000 : address;
++}
++//JMF
++*/
++
+ dma::dma(int Channel,uint32_t CBSize,uint32_t UserMemSize) // Fixme! Need to check to be 256 Aligned for UserMem
+ { 
+ 	
+diff --git a/src/gpio.cpp b/src/gpio.cpp
+index 187b400..a25a0e6 100644
+--- a/src/gpio.cpp
++++ b/src/gpio.cpp
+@@ -24,10 +24,43 @@ extern "C" {
+ #include <unistd.h>
+ #include <sys/timex.h>
+ #include <math.h>
++#include <string.h>
+ #include "util.h"
+-#include <bcm_host.h>
++#include "pi64.h"
++//#include <bcm_host.h>
+ //#include "/opt/vc/include/bcm_host.h"
+ 
++/*
++//JMF
++static unsigned get_dt_ranges(const char *filename, unsigned offset)
++{
++   unsigned address = ~0;
++   FILE *fp = fopen(filename, "rb");
++   if (fp)
++   {
++      unsigned char buf[4];
++      fseek(fp, offset, SEEK_SET);
++      if (fread(buf, 1, sizeof buf, fp) == sizeof buf)
++         address = buf[0] << 24 | buf[1] << 16 | buf[2] << 8 | buf[3] << 0;
++      fclose(fp);
++   }
++   return address;
++}
++
++unsigned bcm_host_get_peripheral_address(void)
++{
++   unsigned address = get_dt_ranges("/proc/device-tree/soc/ranges", 4);
++   return address == ~0 ? 0x20000000 : address;
++}
++
++unsigned bcm_host_get_sdram_address(void)
++{
++    unsigned address = get_dt_ranges("/proc/device-tree/axi/vc_mem/reg", 8);
++    return address == ~0 ? 0x40000000 : address;
++}
++//JMF
++*/
++
+ gpio::gpio(uint32_t base, uint32_t len)
+ {
+ 
+diff --git a/src/pi64.c b/src/pi64.c
+new file mode 100644
+index 0000000..4268b2f
+--- /dev/null
++++ b/src/pi64.c
+@@ -0,0 +1,31 @@
++#include "stdint.h"
++#include <cstdio>
++
++//JMF
++static unsigned get_dt_ranges(const char *filename, unsigned offset)
++{
++   unsigned address = ~0;
++   FILE *fp = fopen(filename, "rb");
++   if (fp)
++   {
++      unsigned char buf[4];
++      fseek(fp, offset, SEEK_SET);
++      if (fread(buf, 1, sizeof buf, fp) == sizeof buf)
++         address = buf[0] << 24 | buf[1] << 16 | buf[2] << 8 | buf[3] << 0;
++      fclose(fp);
++   }
++   return address;
++}
++
++unsigned bcm_host_get_peripheral_address(void)
++{
++   unsigned address = get_dt_ranges("/proc/device-tree/soc/ranges", 4);
++   return address == ~0 ? 0x20000000 : address;
++}
++
++unsigned bcm_host_get_sdram_address(void)
++{
++    unsigned address = get_dt_ranges("/proc/device-tree/axi/vc_mem/reg", 8);
++    return address == ~0 ? 0x40000000 : address;
++}
++//JMF
+diff --git a/src/pi64.h b/src/pi64.h
+new file mode 100644
+index 0000000..9840f52
+--- /dev/null
++++ b/src/pi64.h
+@@ -0,0 +1,5 @@
++//JMF
++static unsigned get_dt_ranges(const char *filename, unsigned offset);
++unsigned bcm_host_get_peripheral_address(void);
++unsigned bcm_host_get_sdram_address(void);
++//JMF
+
