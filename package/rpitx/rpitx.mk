@@ -24,13 +24,17 @@ define RPITX_BUILD_CMDS
 endef
 
 define RPITX_INSTALL_STAGING_CMDS
-    $(TARGET_MAKE_ENV) $(TARGET_CONFIGURE_OPTS) $(MAKE) \
-        DESTDIR=$(STAGING_DIR) -C $(@D) install
 endef
 
 define RPITX_INSTALL_TARGET_CMDS
-    $(TARGET_MAKE_ENV) $(TARGET_CONFIGURE_OPTS) $(MAKE) \
-        DESTDIR=$(TARGET_DIR) -C $(@D) install
+	$(INSTALL) -D -m 0755 $(@D)/foxhunt $(TARGET_DIR)/usr/bin
+	$(INSTALL) -D -m 0755 $(@D)/freedv $(TARGET_DIR)/usr/bin
+	$(INSTALL) -D -m 0755 $(@D)/rpitx $(TARGET_DIR)/usr/bin
+	$(INSTALL) -D -m 0755 $(@D)/pi* $(TARGET_DIR)/usr/bin
+	$(INSTALL) -D -m 0755 $(@D)/sendiq $(TARGET_DIR)/usr/bin
+	$(INSTALL) -D -m 0755 $(@D)/sendook $(TARGET_DIR)/usr/bin
+	$(INSTALL) -D -m 0755 $(@D)/spectrumpaint $(TARGET_DIR)/usr/bin
+	$(INSTALL) -D -m 0755 $(@D)/tune $(TARGET_DIR)/usr/bin
 endef
 
 $(eval $(generic-package))
