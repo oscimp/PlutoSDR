@@ -43,7 +43,7 @@ Index: buildroot/package/gnuradio/gnuradio.mk
  endif
  
 +ifeq ($(BR2_PACKAGE_GNURADIO_UHD),y)
-+GNURADIO_DEPENDENCIES += uhd
++GNURADIO_DEPENDENCIES += uhd-pluto
 +GNURADIO_CONF_OPTS += -DENABLE_GR_UHD=ON
 +else
 +GNURADIO_CONF_OPTS += -DENABLE_GR_UHD=OFF
@@ -62,7 +62,7 @@ Index: buildroot/package/gnuradio/Config.in
  
 +config BR2_PACKAGE_GNURADIO_UHD
 +	bool "gr-uhd support"
-+	select BR2_PACKAGE_UHD
++	select BR2_PACKAGE_UHD_PLUTO
 +	help
 +	  libUHD support
 +
