@@ -54,9 +54,12 @@ config BR2_PACKAGE_GNSS_SDR_OSMOSDR
 	help
 	  Enable the use of OsmoSDR
 
+comment "UHD support for gnss-sdr needs gnuradio with uhd"
+	depends on !BR2_PACKAGE_GNURADIO_UHD
+
 config BR2_PACKAGE_GNSS_SDR_UHD
 	bool "enable UHD support"
-	depends on BR2_PACKAGE_UHD
+	depends on BR2_PACKAGE_GNURADIO_UHD
 	help
 	  Enable the use of UHD
 
