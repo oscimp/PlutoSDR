@@ -1,0 +1,41 @@
+From 997cea520c138598c1f027086a74c38ed41077cd Mon Sep 17 00:00:00 2001
+From: Gwenhael Goavec-Merou <gwenhael.goavec-merou@trabucayre.com>
+Date: Thu, 14 Jan 2021 09:39:06 +0100
+Subject: [PATCH] install binaries (TARGETS) in proper directory (bin)
+
+Signed-off-by: Gwenhael Goavec-Merou <gwenhael.goavec-merou@trabucayre.com>
+---
+ CMakeLists.txt             | 4 ++--
+ mod_pcie/CMakeLists.txt    | 2 +-
+ mod_usb3380/CMakeLists.txt | 2 +-
+ tests/CMakeLists.txt       | 2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 07a8ba1..153286a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -51,9 +51,9 @@ else()
+ 	message(WARNING "Unknown system type is ${CMAKE_SYSTEM_NAME}")
+ endif()
+ 
++set(XTRXLL_RUNTIME_DIR      bin)
+ set(XTRXLL_LIBRARY_DIR      lib${LIB_SUFFIX})
+ set(XTRXLL_INCLUDE_DIR      include)
+-set(XTRXLL_UTILS_DIR        ${XTRXLL_LIBRARY_DIR}/xtrxll)
+ 
+ CONFIGURE_FILE(
+ 	${CMAKE_CURRENT_SOURCE_DIR}/libxtrxll.pc.in
+diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
+index fcefcd3..fb08843 100644
+--- a/tests/CMakeLists.txt
++++ b/tests/CMakeLists.txt
+@@ -7,4 +7,4 @@ target_link_libraries(test_xtrxll xtrxll ${SYSTEM_LIBS})
+ add_executable(test_xtrxflash test_xtrxflash.c)
+ target_link_libraries(test_xtrxflash xtrxll ${SYSTEM_LIBS})
+ 
+-install(TARGETS test_xtrxll test_xtrxflash DESTINATION ${XTRXLL_UTILS_DIR})
++install(TARGETS test_xtrxll test_xtrxflash DESTINATION ${XTRXLL_RUNTIME_DIR})
+-- 
+2.26.2
+
