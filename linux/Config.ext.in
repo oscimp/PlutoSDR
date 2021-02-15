@@ -1,0 +1,6 @@
+config BR2_LINUX_KERNEL_EXT_XTRX_LINUX_PCIE_DRV
+	bool "example-external-driver"
+	select BR2_PACKAGE_XTRX_LINUX_PCIE_DRV
+	help
+	  Example external driver
+

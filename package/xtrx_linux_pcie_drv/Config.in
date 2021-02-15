@@ -1,0 +1,10 @@
+# Prompt-less option, because this package is not doing anything
+# except downloading the xtrx linux pcie drv sources. The real
+# work is done by a Linux extension.
+config BR2_PACKAGE_XTRX_LINUX_PCIE_DRV
+	bool
+	depends on BR2_LINUX_KERNEL
+	help
+	  XTRX PCI driver for linux
+
+	  https://github.com/xtrx-sdr/xtrx_linux_pcie_drv
