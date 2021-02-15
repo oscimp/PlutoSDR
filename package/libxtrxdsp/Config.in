@@ -1,0 +1,6 @@
+config BR2_PACKAGE_LIBXTRXDSP
+	bool "libxtrxdsp"
+	help
+	  DSP specific function for SDR in general and XTRX in specific
+
+	  https://github.com/xtrx-sdr/libxtrxdsp
