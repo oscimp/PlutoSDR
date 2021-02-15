@@ -1,0 +1,9 @@
+config BR2_PACKAGE_LIBXTRX
+	bool "libxtrx"
+	depends on BR2_PACKAGE_LIBLMS7002M
+	select BR2_PACKAGE_LIBXTRXLL
+	select BR2_PACKAGE_LIBXTRXDSP
+	help
+	  High level XTRX API
+
+	  https://github.com/xtrx-sdr/libxtrx
