@@ -1,0 +1,28 @@
+From 6643cead1c98267c60f4777d7202c5fbad2003f8 Mon Sep 17 00:00:00 2001
+From: Gwenhael Goavec-Merou <gwenhael.goavec-merou@trabucayre.com>
+Date: Mon, 11 Jan 2021 17:56:50 +0100
+Subject: [PATCH 3/3] lib/xtrx: add missing libraries
+
+Signed-off-by: Gwenhael Goavec-Merou <gwenhael.goavec-merou@trabucayre.com>
+---
+ lib/xtrx/CMakeLists.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/lib/xtrx/CMakeLists.txt b/lib/xtrx/CMakeLists.txt
+index 9297bf0..7f31829 100644
+--- a/lib/xtrx/CMakeLists.txt
++++ b/lib/xtrx/CMakeLists.txt
+@@ -26,6 +26,10 @@ target_include_directories(gnuradio-osmosdr PRIVATE
+     ${LIBXTRX_INCLUDE_DIRS}
+ )
+ 
++APPEND_LIB_LIST(
++    ${LIBXTRX_LIBRARIES}
++)
++
+ list(APPEND gr_osmosdr_srcs
+     ${CMAKE_CURRENT_SOURCE_DIR}/xtrx_obj.cc
+     ${CMAKE_CURRENT_SOURCE_DIR}/xtrx_source_c.cc
+-- 
+2.26.2
+
