@@ -1,0 +1,90 @@
+From c3187ab8750d1450157493b3bb94f5f9808ada03 Mon Sep 17 00:00:00 2001
+From: Clayton Smith <argilo@gmail.com>
+Date: Fri, 8 Jan 2021 22:35:07 -0500
+Subject: [PATCH 2/3] xtrx: remove BOOST_FOREACH and obsolete API call
+
+All instances of BOOST_FOREACH were removed in an earlier commit, but it
+was reintroduced when xtrx support was merged. I removed BOOST_FOREACH
+again here.
+
+Also, xtrx support fails to build because it relies on the
+xtrx_open_list function, which was removed from the xtrx API in 2019. It
+was replaced with xtrx_open_string.
+
+I don't have xtrx hardware, so I've only tested that gr-osmosdr compiles
+with these changes.
+
+Signed-off-by: Eric Wild <ewild@sysmocom.de>
+Signed-off-by: Gwenhael Goavec-Merou <gwenhael.goavec-merou@trabucayre.com>
+---
+ lib/sink_impl.cc        | 3 ++-
+ lib/source_impl.cc      | 2 +-
+ lib/xtrx/xtrx_obj.cc    | 2 +-
+ lib/xtrx/xtrx_sink_c.cc | 4 ++--
+ 4 files changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/lib/sink_impl.cc b/lib/sink_impl.cc
+index 2493883..317855a 100644
+--- a/lib/sink_impl.cc
++++ b/lib/sink_impl.cc
+@@ -154,7 +154,8 @@ sink_impl::sink_impl( const std::string &args )
+       dev_list.push_back( dev );
+ #endif
+ #ifdef ENABLE_XTRX
+-	BOOST_FOREACH( std::string dev, xtrx_sink_c::get_devices() )
++    for (std::string dev : xtrx_sink_c::get_devices())
++      dev_list.push_back( dev );
+ #endif
+ #ifdef ENABLE_FILE
+     for (std::string dev : file_sink_c::get_devices())
+diff --git a/lib/source_impl.cc b/lib/source_impl.cc
+index 84f5024..8f2028b 100644
+--- a/lib/source_impl.cc
++++ b/lib/source_impl.cc
+@@ -242,7 +242,7 @@ source_impl::source_impl( const std::string &args )
+       dev_list.push_back( dev );
+ #endif
+ #ifdef ENABLE_XTRX
+-    BOOST_FOREACH( std::string dev, xtrx_source_c::get_devices() )
++    for (std::string dev : xtrx_source_c::get_devices())
+       dev_list.push_back( dev );
+ #endif
+ 
+diff --git a/lib/xtrx/xtrx_obj.cc b/lib/xtrx/xtrx_obj.cc
+index a971df4..016b420 100644
+--- a/lib/xtrx/xtrx_obj.cc
++++ b/lib/xtrx/xtrx_obj.cc
+@@ -68,7 +68,7 @@ xtrx_obj::xtrx_obj(const std::string &path, unsigned loglevel, bool lmsreset)
+   unsigned xtrxflag = (loglevel & XTRX_O_LOGLVL_MASK) | ((lmsreset) ? XTRX_O_RESET : 0);
+   std::cerr << "xtrx_obj::xtrx_obj = " << xtrxflag << std::endl;
+ 
+-  int res = xtrx_open_list(path.c_str(), NULL, &_obj);
++  int res = xtrx_open_string(path.c_str(), &_obj);
+   if (res < 0) {
+     std::stringstream message;
+     message << "Couldn't open "  ": Error: " << -res;
+diff --git a/lib/xtrx/xtrx_sink_c.cc b/lib/xtrx/xtrx_sink_c.cc
+index 46ce1b0..5253311 100644
+--- a/lib/xtrx/xtrx_sink_c.cc
++++ b/lib/xtrx/xtrx_sink_c.cc
+@@ -394,7 +394,7 @@ void xtrx_sink_c::tag_process(int ninput_items)
+   uint64_t max_count = samp0_count + ninput_items;
+ 
+   bool found_time_tag = false;
+-  BOOST_FOREACH(const gr::tag_t &my_tag, _tags) {
++  for (const gr::tag_t &my_tag : _tags) {
+     const uint64_t my_tag_count = my_tag.offset;
+     const pmt::pmt_t &key = my_tag.key;
+     const pmt::pmt_t &value = my_tag.value;
+@@ -416,7 +416,7 @@ void xtrx_sink_c::tag_process(int ninput_items)
+ 
+       std::cerr << "TX_TIME: " << seconds << ":" << fractional << std::endl;
+     }
+-  } // end foreach
++  } // end for
+ 
+   if (found_time_tag) {
+     //_metadata.has_time_spec = true;
+-- 
+2.26.2
+
