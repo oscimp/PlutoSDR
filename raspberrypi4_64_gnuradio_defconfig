@@ -42,3 +42,6 @@ BR2_PACKAGE_GNSS_SDR_UHD=y
 BR2_PACKAGE_UHD=y
 BR2_PACKAGE_UHD_B200=y
 BR2_PACKAGE_VXI11=y
+BR2_ROOTFS_POST_BUILD_SCRIPT="board/raspberrypi4-64/post-build.sh"
+BR2_ROOTFS_POST_IMAGE_SCRIPT="board/raspberrypi4-64/post-image.sh"
+BR2_ROOTFS_POST_SCRIPT_ARGS="--add-miniuart-bt-overlay --aarch64"
