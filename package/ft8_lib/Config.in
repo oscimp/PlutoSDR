@@ -1,4 +1,4 @@
-config BR2_PACKAGE_LIBFT8
-	bool "libft8"
+config BR2_PACKAGE_FT8_LIB
+	bool "ft8_lib"
 	help
 	  FT8 automated radiofrequency beacon library
