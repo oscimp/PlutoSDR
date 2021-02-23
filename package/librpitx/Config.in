@@ -2,5 +2,3 @@ config BR2_PACKAGE_LIBRPITX
 	bool "librpitx"
 	help
 	  RPiTX library
-
-comment "librpitx is needed for RPiTX"
