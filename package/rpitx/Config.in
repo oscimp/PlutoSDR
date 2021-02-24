@@ -2,5 +2,6 @@ config BR2_PACKAGE_RPITX
 	bool "rpitx"
 	select BR2_PACKAGE_FT8_LIB
 	select BR2_PACKAGE_LIBRPITX
+	select BR2_PACKAGE_LIBSNDFILE
 	help
 	  RPiTX application

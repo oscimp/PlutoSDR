@@ -9,7 +9,7 @@ RPITX_SITE = $(call github,F5OEO,rpitx,$(RPITX_VERSION))
 RPITX_INSTALL_STAGING = YES
 RPITX_LICENSE = GPL-3.0
 RPITX_LICENSE_FILES = GNU_General_Public_License.txt
-RPITX_DEPENDENCIES = ft8_lib librpitx
+RPITX_DEPENDENCIES = libsndfile ft8_lib librpitx
 
 define RPITX_BUILD_CMDS
     $(TARGET_MAKE_ENV) $(TARGET_CONFIGURE_OPTS) $(MAKE) -C $(@D)/src
