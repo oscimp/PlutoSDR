@@ -14,7 +14,7 @@ define LIBRPITX_BUILD_CMDS
     $(TARGET_MAKE_ENV) $(TARGET_CONFIGURE_OPTS) $(MAKE) -C $(@D)/src
 endef
 
-define LIBRPITX_INSTALL_TARGET_CMDS
+define LIBRPITX_INSTALL_STAGING_CMDS
 	$(INSTALL) -D -m 0644 $(@D)/src/librpitx.so $(STAGING_DIR)/usr/lib/librpitx.so
 	mkdir -p $(STAGING_DIR)/usr/include/librpitx
 	$(INSTALL) -D -m 0644 $(@D)/src/librpitx.h $(STAGING_DIR)/usr/include/librpitx/librpitx.h
@@ -34,6 +34,10 @@ define LIBRPITX_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0644 $(@D)/src/raspberry_pi_revision.h $(STAGING_DIR)/usr/include/librpitx/raspberry_pi_revision.h
 	$(INSTALL) -D -m 0644 $(@D)/src/rpi.h $(STAGING_DIR)/usr/include/librpitx/rpi.h
 	$(INSTALL) -D -m 0644 $(@D)/src/serialdmasync.h $(STAGING_DIR)/usr/include/librpitx/serialdmasync.h
+endef
+
+define LIBRPITX_INSTALL_TARGET_CMDS
+	$(INSTALL) -D -m 0644 $(@D)/src/librpitx.so $(TARGET_DIR)/usr/lib/librpitx.so
 endef
 
 $(eval $(generic-package))
