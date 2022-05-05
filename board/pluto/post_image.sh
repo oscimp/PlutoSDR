@@ -18,6 +18,6 @@ cat $BIN_DIR/pluto.itb  $BIN_DIR/pluto.md5 > $BIN_DIR/pluto.frm
 
 echo "generating pluto.dfu"
 $dfu_suffix -a $BIN_DIR/pluto.itb -v $DEVICE_VID -p $DEVICE_PID
-mv $BIN_DIR/pluto.itb $BIN_DIR/pluto.dfu
+cp $BIN_DIR/pluto.itb $BIN_DIR/pluto.dfu
 
-rm -f $BIN_DIR/pluto.its $BIN_DIR/*.md5
+#rm -f $BIN_DIR/pluto.its $BIN_DIR/*.md5
