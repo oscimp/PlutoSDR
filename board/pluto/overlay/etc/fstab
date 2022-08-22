@@ -6,3 +6,5 @@ tmpfs		/dev/shm	tmpfs	mode=0777	0	0
 tmpfs		/tmp		tmpfs	mode=1777	0	0
 tmpfs		/run		tmpfs	mode=0755,nosuid,nodev	0	0
 sysfs		/sys		sysfs	defaults	0	0
+
+192.168.2.10:/home/bma/git/nfs_fpga_design/plutosdr /usr/local nfs defaults,noauto,nolock 0  0
