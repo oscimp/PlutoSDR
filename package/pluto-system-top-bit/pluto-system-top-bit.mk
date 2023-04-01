@@ -4,10 +4,10 @@
 #
 ################################################################################
 
-PLUTO_SYSTEM_TOP_BIT_VERSION = v0.30
+PLUTO_SYSTEM_TOP_BIT_VERSION = v0.37
 PLUTO_SYSTEM_TOP_BIT_SOURCE = plutosdr-jtag-bootstrap-$(PLUTO_SYSTEM_TOP_BIT_VERSION).zip
-PLUTO_SYSTEM_TOP_BIT_SITE = http://github.com/analogdevicesinc/plutosdr-fw/releases/download/$(PLUTO_SYSTEM_TOP_BIT_VERSION)
-
+PLUTO_SYSTEM_TOP_BIT_SITE = https://github.com/analogdevicesinc/plutosdr-fw/releases/download/$(PLUTO_SYSTEM_TOP_BIT_VERSION)
+https://github.com/analogdevicesinc/plutosdr-fw/releases/download/v0.37/plutosdr-jtag-bootstrap-v0.37.zip
 PLUTO_SYSTEM_TOP_BIT_INSTALL_IMAGES = YES
 PLUTO_SYSTEM_TOP_BIT_INSTALL_TARGET = NO
 
