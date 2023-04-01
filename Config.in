@@ -8,7 +8,8 @@ source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/gr-iio/Config.in"
 menu "Applications and Tools for PlutoSDR, M2k & SidekiqZ2"
 	source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/poll_sysfs/Config.in"
 	source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/ad936x_ref_cal/Config.in"
+endmenu
 
 menu "Applications and Tools for the JESD204B Interface Framework"
-	source "package/jesd204b_status/Config.in"
+	source "$BR2_EXTERNAL_PLUTOSDR_PATH/package/jesd204b_status/Config.in"
 endmenu
