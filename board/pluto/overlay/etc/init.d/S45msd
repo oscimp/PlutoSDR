@@ -11,15 +11,23 @@ patch_html_page() {
 	LINUX=`uname -a | tr / - | tr '\n' ';' ; echo -n $(nproc) "core(s)"`
 	MODEL=`cat /etc/libiio.ini | grep hw_model= | cut -d '=' -f 2`
 	SERIAL=`cat /sys/kernel/config/usb_gadget/composite_gadget/strings/0x409/serialnumber`
-	MACHOST=`cat /sys/kernel/config/usb_gadget/composite_gadget/functions/rndis.0/host_addr`
-	MAC=`cat /sys/kernel/config/usb_gadget/composite_gadget/functions/rndis.0/dev_addr`
+	MACHOST=`cat /sys/kernel/config/usb_gadget/composite_gadget/functions/*/host_addr`
+	MAC=`cat /sys/kernel/config/usb_gadget/composite_gadget/functions/*/dev_addr`
 	IIO=`iio_info 2>/dev/null | grep "Library version:"`
 	BUILD=`grep device-fw /opt/VERSIONS | cut -d ' ' -f 2`
 	FPGA=`grep hdl /opt/VERSIONS | cut -d ' ' -f 2`
 	ROOTFS=`grep buildroot /opt/VERSIONS | cut -d ' ' -f 2`
 	UBOOT=`cat /proc/cmdline | tr  "=" "\n" | grep "U-Boot"`
+	USB_ETH_MODE=`fw_printenv -n usb_ethernet_mode 2> /dev/null || echo 0`
+	if [ "$USB_ETH_MODE" == "ncm" ]; then
+		NETWORKUSB="Communications Device Class – Network Control Model (CDC-NCM)"
+	elif [ "$USB_ETH_MODE" == "ecm" ]; then
+		NETWORKUSB="Communications Device Class – Ethernet Control Module (CDC-EMC)"
+	else
+		NETWORKUSB="Remote Network Driver Interface Specification (RNDIS)"
+	fi
 
-	sed -i -e "s/#LINUX#/$LINUX/g" -e "s/#MODEL#/$MODEL/g" -e "s/#SERIAL#/$SERIAL/g" -e "s/#MACHOST#/$MACHOST/g" -e "s/#MAC#/$MAC/g" -e "s/#IIO#/$IIO/g" -e "s/#BUILD#/$BUILD/g" -e "s/#FPGA#/$FPGA/g" -e "s/#ROOTFS#/$ROOTFS/g" -e "s/#UBOOT#/$UBOOT/g" $1
+	sed -i -e "s/#LINUX#/$LINUX/g" -e "s/#MODEL#/$MODEL/g" -e "s/#SERIAL#/$SERIAL/g" -e "s/#MACHOST#/$MACHOST/g" -e "s/#MAC#/$MAC/g" -e "s/#IIO#/$IIO/g" -e "s/#BUILD#/$BUILD/g" -e "s/#FPGA#/$FPGA/g" -e "s/#ROOTFS#/$ROOTFS/g" -e "s/#UBOOT#/$UBOOT/g" -e "s/#NETWORKUSB#/$NETWORKUSB/g" $1
 
 	sed -i -e "s/#BUILD#/$BUILD/g" $2 /etc/motd
 }
@@ -28,22 +36,21 @@ patch_html_page() {
 case "$1" in
 	start)
 		echo -n "Starting MSD Daemon: "
-		patch_html_page "/www/index.html /www/img/index_*.html" /www/img/version.js
+		patch_html_page /www/index.html /www/img/version.js
 		losetup /dev/loop7 $img -o 512
-		mount /dev/loop7 /mnt
+		mount /dev/loop7 /mnt/msd
 
 		if [ "$TARGET" == "m2k" ]; then
 			cp /opt/${CALIBFILENAME} /mnt
-			md5sum /mnt/${CALIBFILENAME} > /opt/${CALIBFILENAME}.md5
+			md5sum /mnt/msd/${CALIBFILENAME} > /opt/${CALIBFILENAME}.md5
 		fi
 
-		cp $CONF /mnt
-		md5sum /mnt/config.txt > /opt/config.md5
+		cp $CONF /mnt/msd
+		md5sum /mnt/msd/config.txt > /opt/config.md5
 
-		cp -a /www/* /mnt/
-		mv /mnt/index.html /mnt/info.html
-		sed -i -e "s/..\/index.html/..\/info.html/g" /mnt/img/index_*.html
-		umount /mnt
+		cp -a /www/* /mnt/msd
+		mv /mnt/msd/index.html /mnt/msd/info.html
+		umount /mnt/msd
 		echo $img > $file
 
 		start-stop-daemon -S -b -q -m -p /var/run/update.pid -x /bin/sh -- /sbin/update.sh
