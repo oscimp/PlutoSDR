@@ -15,12 +15,14 @@ How-to use it
 
 A ready-to-use image is available for the Raspberry Pi 4 at http://jmfriedt.org/sdcard.img including GNU Radio 3.8 and Qt5 support. Login=root, password=root.
 
-### With *PlutoSDR* tag **v2019.02**
+### With *Buildroot* tag **v2024.08**
 
 Download the tested buildroot tarball:
 ```bash
-wget https://buildroot.org/downloads/buildroot-2019.02.tar.gz
+wget https://buildroot.org/downloads/buildroot-2024.08.tar.gz
 ```
+
+If you wish to rename the directory, do so *before* running ``make zynq_pluto_defconfig`` (below) since some links in the tree structure created by the configuration will break if renaming the directory name afterward.
 
 ### Configure, build and install
 
