@@ -1,6 +1,8 @@
 # PlutoSDR
 BR2_EXTERNAL framework for Analog Device's PlutoSDR Zynq
 
+
+
 This repository provides buildroot based support for ADALM-pluto board (based on
 [Analog Device's plutosdr-fw](https://github.com/analogdevicesinc/plutosdr-fw)).
 
@@ -51,6 +53,23 @@ The <code>output/images/pluto.frm</code> file is then copied to the mass storage
 most cases <code>/dev/sdb1</code>)
 and then written after ejecting the associated mass storage root (in this example <code>sudo eject /dev/sdb</code>) as 
 explained at [Analog Device's PlutoSDR firmware information](https://wiki.analog.com/university/tools/pluto/users/firmware)
+
+#### If pluto.dfu does not fit into the qspi
+
+On pluto:
+```bash
+device_reboot ram
+```
+
+On host:
+```bash
+sudo dfu-util -v -a firmware.dfu -D output/images/pluto.dfu
+sudo dfu-util -v -a firmware.dfu -e
+```
+
+If network interface init is looping, set a manual IP to 192.168.2.10.
+
+### DFU
 
 In case of failure, DFU programming provides a backup solution. **MAKE SURE TO POWER THE DIO PIN OF THE FTDI INTERFACE
 WITH 1.8V and NOT the default 3.3 or 5V (that will definitely destroy the Zynq)**
