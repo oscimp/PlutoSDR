@@ -1,0 +1,12 @@
+Index: python-remi-2022.7.27/setup.py
+===================================================================
+--- python-remi-2022.7.27.orig/setup.py
++++ python-remi-2022.7.27/setup.py
+@@ -26,6 +26,6 @@ try:
+     setup(**params)
+ except:
+     del params['setup_requires']
+-    params['use_scm_version'] = False
++    del params['use_scm_version']
+     params['version'] = '2022.7.27'
+     setup(**params)
